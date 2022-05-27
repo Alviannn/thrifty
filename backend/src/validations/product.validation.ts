@@ -28,3 +28,17 @@ export const addSchema = joi.object<ProductType>({
         .max(5)
         .required()
 });
+
+export const updateSchema = joi.object<ProductType>({
+    name: joi.string()
+        .max(64),
+
+    description: joi.string()
+        .max(1023),
+
+    price: joi.number()
+        .max(19),
+
+    type: joi.number()
+        .max(5)
+});

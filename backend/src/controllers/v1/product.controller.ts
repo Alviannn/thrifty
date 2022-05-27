@@ -11,7 +11,7 @@ import type {
     ProductIdType, ProductType
 } from '../../validations/product.validation';
 import {
-    addSchema
+    addSchema, updateSchema
 } from '../../validations/product.validation';
 
 @Controller({ path: 'product' })
@@ -56,7 +56,7 @@ export class ProductRoute {
         });
     }
 
-    @ReqHandler('PUT', '/:productId')
+    @ReqHandler('PUT', '/:productId', validate(updateSchema))
     async update(req: Request, res: Response) {
         const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as ProductType;
