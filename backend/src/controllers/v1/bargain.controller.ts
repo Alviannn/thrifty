@@ -1,26 +1,45 @@
-import validate from '../../middlewares/validate.middleware';
-import authenticate from '../../middlewares/authenticate.middleware';
-
 import { Request, Response } from 'express';
-import { sendResponse } from '../../utils/api.util';
-import { bargainSchema } from '../../validations/bargain-request.validation';
-import { bargainService } from '../../services/bargain.service';
 import {
-    productIdSchema,
+    Controller,
+    ReqHandler
+} from '../../internals/decorators/express.decorator';
+import authenticate from '../../middlewares/authenticate.middleware';
+import validate from '../../middlewares/validate.middleware';
+import { bargainService } from '../../services/bargain.service';
+import { sendResponse } from '../../utils/api.util';
+import type {
+    BargainIdDTO, CreateBargainDTO, UpdateBargainDTO
+} from '../../validations/bargain-request.validation';
+import {
+    bargainIdSchema, bargainSchema, updateBargainSchema
+} from '../../validations/bargain-request.validation';
+import type { ProductIdType } from '../../validations/product.validation';
+import {
+    productIdSchema
 } from '../../validations/product.validation';
 
-import {
-    Controller, ReqHandler
-} from '../../internals/decorators/express.decorator';
-import type {
-    CreateBargainDTO
-} from '../../validations/bargain-request.validation';
-import type {
-    ProductIdType
-} from '../../validations/product.validation';
 
 @Controller({ path: 'bargains' })
 export class BargainRequestRoute {
+
+    @ReqHandler(
+        'GET', '/:productId',
+        authenticate(),
+        validate(productIdSchema, 'PARAMS')
+    )
+    async getAll(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const { productId } = req.params as unknown as ProductIdType;
+
+        const bargains = await bargainService.getAll(userId, productId);
+
+        return sendResponse(res, {
+            message: 'Successfully get all bargain requests',
+            data: {
+                bargains
+            }
+        });
+    }
 
     @ReqHandler(
         'POST', '/:productId',
@@ -28,12 +47,12 @@ export class BargainRequestRoute {
         validate(productIdSchema, 'PARAMS'),
         validate(bargainSchema)
     )
-    async makeBargain(req: Request, res: Response) {
+    async create(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
         const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as CreateBargainDTO;
 
-        await bargainService.requestBargain(userId, productId, body);
+        await bargainService.create(userId, productId, body);
 
         return sendResponse(res, {
             message: 'Sent bargain price request for current product!'
@@ -41,21 +60,25 @@ export class BargainRequestRoute {
     }
 
     @ReqHandler(
-        'GET', '/:productId',
+        'PUT', '/:productId/:bargainId',
         authenticate(),
-        validate(productIdSchema, 'PARAMS')
+        validate(productIdSchema, 'PARAMS'),
+        validate(bargainIdSchema, 'PARAMS'),
+        validate(updateBargainSchema)
     )
-    async allBargains(req: Request, res: Response) {
-        const { id: userId } = req.userPayload!;
-        const { productId } = req.params as unknown as ProductIdType;
+    async update(req: Request, res: Response) {
+        const {
+            bargainId,
+            productId
+        } = req.params as unknown as (ProductIdType & BargainIdDTO);
 
-        const bargains = await bargainService.viewBargains(userId, productId);
+        const { id: userId } = req.userPayload!;
+        const { status } = req.body as UpdateBargainDTO;
+
+        await bargainService.update(userId, productId, bargainId, status);
 
         return sendResponse(res, {
-            message: 'Successfully get all bargain requests',
-            data: {
-                bargains
-            }
+            message: 'Successfully updated bargain request'
         });
     }
 
