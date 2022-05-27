@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { FaShoppingCart, FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import styled from "styled-components";
-import react, { useState } from "react";
-import { CgProfile } from "react-icons/cg";
+import { useState } from "react";
+import { FaUser } from "react-icons/fa";
 
 const Nav = styled.nav`
 	z-index: 1;
@@ -90,15 +90,15 @@ const Navbar = () => {
 								</div>
 							)}
 							{loggedIn && (
-								<div style={{ marginLeft: "10px" }}>
-									<Link href="/profile">
-										<button className="btn">
-											<ProfileText>
-												<CgProfile /> Fabian Habil
-											</ProfileText>
-										</button>
-									</Link>
-								</div>
+                                <div style={{ marginLeft: "10px" }}>
+                                    <Link href="/profile">
+                                        <button className="btn btn-brown">
+                                            <ProfileText>
+                                                <FaUser /> Fabian Habil
+                                            </ProfileText>
+                                        </button>
+                                    </Link>
+                                </div>
 							)}
 						</form>
 					</div>
