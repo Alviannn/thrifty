@@ -33,13 +33,13 @@ const Product = () => {
                     <FetchLoading />
                 ) : (
                     <div className="row pt-5 d-flex justify-content-center text-black">
-                        <div className="col-4 mb-4">
+                        <div className="col-lg-4 col-md-6 col-12 mb-4">
                             <h5>Urut berdasarkan</h5>
                             <button className="btn btn-sm btn-brown me-2"><FaArrowDown /> Harga Terendah</button>
                             <button className="btn btn-sm btn-dark-brown me-2"><FaArrowUp /> Harga Tertinggi</button>
                         </div>
 
-                        <div className="col-4 mb-4">
+                        <div className="col-lg-4 col-md-6 col-12 mb-4">
                             <h5>Filter berdasarkan</h5>
                             <button className="btn btn-sm btn-beige me-2">Atasan</button>
                             <button className="btn btn-sm btn-mocca me-2">Bawahan</button>
@@ -47,7 +47,7 @@ const Product = () => {
                             <button className="btn btn-sm btn-mocca me-2">Lainnya</button>
                         </div>
 
-                        <div className="col-4 mb-4">
+                        <div className="col-lg-4 col-12 mb-4">
                             <h5>Masukkan produk anda sendiri</h5>
                             <Link href="/products/add">
                                 <a className="btn btn-sm btn-brown"><FaPlus /> Tambah Produk</a>
