@@ -43,7 +43,6 @@ class ProductService {
     }
 
     async getById(productId: number) {
-        console.log(productId);
         const product = await Product.findOneBy({ id: productId });
         if (!product) {
             throw new ResponseError(
@@ -52,6 +51,20 @@ class ProductService {
         }
 
         return product;
+    }
+
+    async getByUserId(userId: number) {
+        const user = await User.findOneBy({ id: userId });
+
+        if (!user) {
+            throw new ResponseError(
+                'User not found',
+                StatusCodes.NOT_FOUND);
+        }
+
+        const products = await Product.findBy({ userId });
+
+        return products;
     }
 
     async update(userId: number, productId: number, rawProduct: ProductType) {

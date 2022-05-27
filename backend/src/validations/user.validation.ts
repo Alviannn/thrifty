@@ -26,6 +26,10 @@ const passwordSchema = joi.string()
     .regex(/[^a-zA-Z\d]/)
     .rule({ message: '{#label} requires at least a special character' });
 
+export interface UserIdType {
+    userId: number;
+}
+
 export interface LoginType {
     email: string;
     password: string;
@@ -36,6 +40,12 @@ export interface RegisterType extends LoginType {
     phone: string;
     address: string;
 }
+
+export const userIdSchema = joi.object<UserIdType>({
+    userId: joi.number()
+        .min(0)
+        .required()
+});
 
 export const loginSchema = joi.object<LoginType>({
     email: joi.string()

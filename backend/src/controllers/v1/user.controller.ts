@@ -12,6 +12,9 @@ import {
     Controller,
     ReqHandler
 } from '../../internals/decorators/express.decorator';
+import type { UserIdType } from '../../validations/user.validation';
+import { userIdSchema } from '../../validations/user.validation';
+import { productService } from '../../services/product.service';
 
 @Controller({ path: 'users' })
 export class UserRoute {
@@ -39,6 +42,20 @@ export class UserRoute {
 
         return sendResponse(res, {
             message: 'Successfully add topup'
+        });
+    }
+
+    @ReqHandler('GET', '/:userId/products', validate(userIdSchema, 'PARAMS'))
+    async getByUserId(req: Request, res: Response) {
+        const { userId } = req.params as unknown as UserIdType;
+
+        const products = await productService.getByUserId(userId);
+
+        return sendResponse(res, {
+            message: 'Successfully found all products',
+            data: {
+                products
+            }
         });
     }
 
