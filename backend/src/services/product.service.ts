@@ -26,7 +26,7 @@ class ProductService {
         return products;
     }
 
-    async bargain(
+    async requestBargain(
         userId: number, productId: number,
         bargain: CreateBargainDTO) {
 

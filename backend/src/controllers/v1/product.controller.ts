@@ -52,17 +52,17 @@ export class ProductRoute {
     }
 
     @ReqHandler(
-        'POST', '/:productId/bargain',
+        'POST', '/:productId/bargains',
         authenticate(),
         validate(productIdSchema, 'PARAMS'),
         validate(bargainSchema)
     )
-    async bargain(req: Request, res: Response) {
+    async makeBargain(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
         const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as CreateBargainDTO;
 
-        await productService.bargain(userId, productId, body);
+        await productService.requestBargain(userId, productId, body);
 
         return sendResponse(res, {
             message: 'Sent bargain price request for current product!'
