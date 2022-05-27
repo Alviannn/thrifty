@@ -1,6 +1,5 @@
 import { BaseEntity, Column, Entity, PrimaryColumn } from 'typeorm';
 import { DateTime } from 'luxon';
-import { dateTransformer } from '.';
 
 @Entity('refresh_tokens')
 export class RefreshToken extends BaseEntity {
@@ -10,8 +9,7 @@ export class RefreshToken extends BaseEntity {
 
     @Column({
         name: 'created_at',
-        type: 'timestamp',
-        transformer: dateTransformer
+        type: 'timestamp'
     })
     createdAt = DateTime.utc();
 

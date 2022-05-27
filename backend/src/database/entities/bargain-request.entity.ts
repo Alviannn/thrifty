@@ -1,4 +1,3 @@
-import { dateTransformer } from '.';
 import { User } from './user.entity';
 import { Product } from './product.entity';
 import { DateTime } from 'luxon';
@@ -29,6 +28,9 @@ export class BargainRequest extends BaseEntity {
     @JoinColumn({ name: 'product_id' })
     product!: Product;
 
+    @Column({ name: 'product_id' })
+    productId!: number;
+
     @Column('decimal')
     price!: number;
 
@@ -45,14 +47,12 @@ export class BargainRequest extends BaseEntity {
     @Column({
         name: 'created_at',
         type: 'timestamp',
-        transformer: dateTransformer
     })
     createdAt = DateTime.utc();
 
     @Column({
         name: 'updated_at',
         type: 'timestamp',
-        transformer: dateTransformer,
         nullable: true
     })
     updatedAt?: DateTime;
