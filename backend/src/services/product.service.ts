@@ -11,6 +11,12 @@ class ProductService {
         await product.save();
     }
 
+    async get() {
+        const products = await Product.find();
+
+        return products;
+    }
+
 }
 
 export const productService = new ProductService();
