@@ -1,10 +1,12 @@
 import { User } from './user.entity';
 import { Product } from './product.entity';
 import { DateTime } from 'luxon';
+import { Transaction } from './transaction.entity';
 import {
     Column, PrimaryGeneratedColumn, JoinColumn,
     BaseEntity, Entity,
     ManyToOne,
+    OneToOne,
 } from 'typeorm';
 
 export enum BargainStatus {
@@ -30,6 +32,13 @@ export class BargainRequest extends BaseEntity {
 
     @Column({ name: 'product_id' })
     productId!: number;
+
+    @OneToOne(
+        () => Transaction,
+        (trans) => trans.bargain,
+        { nullable: true }
+    )
+    transaction?: Transaction;
 
     @Column('decimal')
     price!: number;
