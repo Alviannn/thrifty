@@ -1,10 +1,8 @@
 import { dateTransformer } from '.';
 import { DateTime } from 'luxon';
-import { Todo } from './todo.entity';
 import {
     BaseEntity, Entity,
-    Column, PrimaryGeneratedColumn,
-    OneToMany
+    Column, PrimaryGeneratedColumn
 } from 'typeorm';
 
 @Entity('users')
@@ -12,9 +10,6 @@ export class User extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id!: number;
-
-    @OneToMany(() => Todo, (todo) => todo.id)
-    todoList!: Todo[];
 
     @Column({ name: 'full_name', length: 64 })
     fullName!: string;
@@ -27,6 +22,12 @@ export class User extends BaseEntity {
 
     @Column({ length: 64 })
     password!: string;
+
+    @Column({ length: 64 })
+    address!: string;
+
+    @Column('decimal')
+    balance!: number;
 
     @Column({
         name: 'created_at',
