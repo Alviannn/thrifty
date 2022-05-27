@@ -13,8 +13,7 @@ import {
     ReqHandler
 } from '../../internals/decorators/express.decorator';
 import type { UpdateType, UserIdType } from '../../validations/user.validation';
-import { updateSchema } from '../../validations/user.validation';
-import { userIdSchema } from '../../validations/user.validation';
+import { updateSchema, userIdSchema } from '../../validations/user.validation';
 import { productService } from '../../services/product.service';
 
 @Controller({ path: 'users' })

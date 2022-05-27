@@ -92,19 +92,16 @@ export const registerSchema = joi.object<RegisterType>({
 });
 
 export const updateSchema = joi.object<UpdateType>({
-    password: passwordSchema.required(),
+    password: passwordSchema,
 
     fullName: joi.string()
-        .max(64)
-        .required(),
+        .max(64),
 
     phone: joi.string()
         .max(32)
 
         .custom(validatePhone)
-        .rule({ message: '{#label} must only be numbers' })
-
-        .required(),
+        .rule({ message: '{#label} must only be numbers' }),
 
     address: joi.string()
         .max(64)
