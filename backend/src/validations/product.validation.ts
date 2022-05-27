@@ -6,5 +6,5 @@ export interface ProductType {
 }
 
 export interface ProductIdType {
-    id: number;
+    productId: number;
 }

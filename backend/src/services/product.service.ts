@@ -21,6 +21,7 @@ class ProductService {
     }
 
     async getById(productId: number) {
+        console.log(productId);
         const product = await Product.findOneBy({ id: productId });
         if (!product) {
             throw new ResponseError(

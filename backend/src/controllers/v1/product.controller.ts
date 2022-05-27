@@ -40,7 +40,7 @@ export class ProductRoute {
 
     @ReqHandler('GET', '/:productId')
     async getById(req: Request, res: Response) {
-        const { id: productId } = req.params as unknown as ProductIdType;
+        const { productId } = req.params as unknown as ProductIdType;
 
         const product = await productService.getById(productId);
 
@@ -54,7 +54,7 @@ export class ProductRoute {
 
     @ReqHandler('PUT', '/:productId')
     async update(req: Request, res: Response) {
-        const { id: productId } = req.params as unknown as ProductIdType;
+        const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as ProductType;
 
         await productService.update(productId, body);
