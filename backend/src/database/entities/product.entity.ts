@@ -1,9 +1,8 @@
 import { DateTime } from 'luxon';
+import { User } from './user.entity';
 import {
     BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn
 } from 'typeorm';
-import { dateTransformer } from '.';
-import { User } from './user.entity';
 
 export enum ProductType {
     OTHERS,
@@ -42,15 +41,13 @@ export class Product extends BaseEntity {
 
     @Column({
         name: 'created_at',
-        type: 'timestamp',
-        transformer: dateTransformer
+        type: 'timestamp'
     })
     createdAt = DateTime.utc();
 
     @Column({
         name: 'updated_at',
         type: 'timestamp',
-        transformer: dateTransformer,
         nullable: true
     })
     updatedAt?: DateTime;
@@ -58,7 +55,6 @@ export class Product extends BaseEntity {
     @Column({
         name: 'deleted_at',
         type: 'timestamp',
-        transformer: dateTransformer,
         nullable: true
     })
     deletedAt?: DateTime;

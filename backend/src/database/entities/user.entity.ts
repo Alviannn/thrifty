@@ -1,4 +1,3 @@
-import { dateTransformer } from '.';
 import { DateTime } from 'luxon';
 import {
     BaseEntity, Entity,
@@ -37,14 +36,12 @@ export class User extends BaseEntity {
     @Column({
         name: 'created_at',
         type: 'timestamp',
-        transformer: dateTransformer
     })
     createdAt = DateTime.utc();
 
     @Column({
         name: 'updated_at',
         type: 'timestamp',
-        transformer: dateTransformer,
         nullable: true
     })
     updatedAt?: DateTime;
