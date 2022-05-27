@@ -19,8 +19,8 @@ import { productService } from '../../services/product.service';
 @Controller({ path: 'users' })
 export class UserRoute {
 
-    @ReqHandler('GET', '/profile', authenticate())
-    async profile(req: Request, res: Response) {
+    @ReqHandler('GET', '/', authenticate())
+    async get(req: Request, res: Response) {
         const { userPayload } = req;
         const user = await userService.get(userPayload!.id);
 
@@ -46,7 +46,7 @@ export class UserRoute {
     }
 
     @ReqHandler('GET', '/:userId/products', validate(userIdSchema, 'PARAMS'))
-    async getByUserId(req: Request, res: Response) {
+    async products(req: Request, res: Response) {
         const { userId } = req.params as unknown as UserIdType;
 
         const products = await productService.getByUsers(userId);
