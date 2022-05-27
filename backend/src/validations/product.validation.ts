@@ -8,11 +8,11 @@ export interface ProductType {
 }
 
 export interface ProductIdType {
-    id: number;
+    productId: number;
 }
 
 export const productIdSchema = joi.object<ProductIdType>({
-    id: joi.number()
+    productId: joi.number()
         .min(0)
         .required()
 });
