@@ -1,3 +1,6 @@
+import fsp from 'fs/promises';
+
+import { nanoid } from 'nanoid';
 import { StatusCodes } from 'http-status-codes';
 import { DateTime } from 'luxon';
 import { IsNull } from 'typeorm';
@@ -5,15 +8,28 @@ import { Product } from '../database/entities/product.entity';
 import { User } from '../database/entities/user.entity';
 import { Errors, ResponseError } from '../utils/api.util';
 
-import type { ProductDTO } from '../validations/product.validation';
+import type {
+    ProductDTO,
+    CreateProductDTO
+} from '../validations/product.validation';
 
 class ProductService {
 
-    async add(userId: number, rawProduct: ProductDTO) {
-        const user = (await User.findOneBy({ id: userId }))!;
+    async create(userId: number, dto: CreateProductDTO) {
+        const { imageData, ...rawProduct } = dto;
+
+        const user = (await User.findOneByOrFail({ id: userId }))!;
         const product = Product.create({ ...rawProduct, user });
 
+        const buffer = Buffer.from(imageData, 'base64');
+
+        const imageFile = `img/${nanoid()}`;
+        product.imageFile = imageFile;
+
         await product.save();
+
+        await fsp.mkdir('img');
+        await fsp.writeFile(imageFile, buffer);
     }
 
     async getAll() {

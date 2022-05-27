@@ -7,6 +7,14 @@ export interface ProductDTO {
     type: number;
 }
 
+export interface CreateProductDTO {
+    name: string;
+    price: number;
+    description: string;
+    type: number;
+    imageData: string;
+}
+
 export interface ProductIdType {
     productId: number;
 }
@@ -17,7 +25,7 @@ export const productIdSchema = joi.object<ProductIdType>({
         .required()
 });
 
-export const productAddSchema = joi.object<ProductDTO>({
+export const productAddSchema = joi.object<CreateProductDTO>({
     name: joi.string()
         .max(64)
         .required(),
@@ -32,6 +40,9 @@ export const productAddSchema = joi.object<ProductDTO>({
 
     type: joi.number()
         .max(5)
+        .required(),
+
+    imageData: joi.string()
         .required()
 });
 

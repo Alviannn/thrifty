@@ -14,9 +14,11 @@ import {
 import {
     Controller, ReqHandler
 } from '../../internals/decorators/express.decorator';
+
 import type {
     ProductDTO,
-    ProductIdType
+    ProductIdType,
+    CreateProductDTO
 } from '../../validations/product.validation';
 
 @Controller({ path: 'products' })
@@ -25,8 +27,9 @@ export class ProductRoute {
     @ReqHandler('POST', '/', authenticate(), validate(productAddSchema))
     async add(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
-        const body = req.body as ProductDTO;
-        await productService.add(userId, body);
+        const body = req.body as CreateProductDTO;
+
+        await productService.create(userId, body);
 
         return sendResponse(res, {
             message: 'Successfully added a new product',

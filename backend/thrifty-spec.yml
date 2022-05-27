@@ -1,0 +1,746 @@
+openapi: '3.0.2'
+
+info:
+  title: 'thrifty marketplace'
+  version: '1.0'
+servers:
+  - url: 'http://localhost:5000/v1'
+
+components:
+  responses:
+    NoSessionError:
+      description: 'Unauthorized'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            status: 'fail'
+            message: "User doesn't have a session"
+    NoPermissionError:
+      description: 'Forbidden'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            status: 'fail'
+            message: "You don't have the permission to access this content"
+    ServerError:
+      description: 'Unexpected Server Error'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            status: 'fail'
+            message: 'Unexpected server error'
+    BadRequest:
+      description: 'Bad request'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Response'
+          example:
+            status: 'fail'
+            message: '<error message caused by the user>'
+
+  securitySchemes:
+    bearerJwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Authentication that uses JWT, it's based on the `Authorization` header\
+        and the format goes by `Bearer <JWT access token>`
+    cookieJwt:
+      type: apiKey
+      in: cookie
+      name: refreshToken
+      description: |
+        A cookie that stores the user's `refreshToken` with the `HttpOnly` flag\
+        to prevent JavaScript modification.\
+        \
+        This means no one can modify this except for the backend server.
+
+  schemas:
+    Response:
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      required:
+        - status
+        - message
+    AccessTokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+      required:
+        - accessToken
+
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required:
+        - email
+        - password
+      example:
+        email: 'jpedrocchi4@linkedin.com'
+        password: 'tMPeztp^&kvNw#zFqU&5vPtr53@sSSk34wWTevJ&'
+    RegisterLogin:
+      allOf:
+        - $ref: '#/components/schemas/UserLogin'
+        - type: object
+          properties:
+            fullName:
+              type: string
+            phone:
+              type: string
+            address:
+              type: string
+          required:
+            - fullName
+            - phone
+            - address
+          example:
+            fullName: 'Javier Pedrocchi'
+            phone: '081892369531'
+            address: 'Batam, Indonesia'
+    SimpleUserDTO:
+      type: object
+      properties:
+        id:
+          type: number
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+      required:
+        - id
+        - fullName
+        - email
+        - phone
+      example:
+        id: 5
+        fullName: 'Alex Minecraft'
+        email: 'alex@minecraft.com'
+        phone: '081892369531'
+    UpdateUserDTO:
+      type: object
+      properties:
+        fullName:
+          type: string
+        password:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+    FullUserDTO:
+      allOf:
+        - $ref: '#/components/schemas/SimpleUserDTO'
+        - type: object
+          properties:
+            balance:
+              type: number
+              format: double
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+          required:
+            - balance
+            - createdAt
+            - updatedAt
+    UserTopupDTO:
+      type: object
+      properties:
+        balance:
+          type: number
+          format: double
+      required:
+        - balance
+      example:
+        balance: 1000000
+
+    CreateProductDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+        description:
+          type: string
+        type:
+          type: integer
+      required:
+        - 'name'
+        - 'price'
+        - 'description'
+        - 'type'
+    ProductDTO:
+      allOf:
+        - $ref: '#/components/schemas/CreateProductDTO'
+        - type: object
+          properties:
+            id:
+              type: integer
+            seller:
+              $ref: '#/components/schemas/SimpleUserDTO'
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+          required:
+            - 'id'
+            - 'seller'
+            - 'createdAt'
+            - 'updatedAt'
+
+paths:
+  /auth/register:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterLogin'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: 'success'
+                message: 'Successfully registered new user'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /auth/login:
+    post:
+      description: |
+        Token expiration:
+        * Access token: 15 minutes
+        * Refresh token: 30 days
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Set-Cookie:
+              required: true
+              schema:
+                type: string
+                example: 'refreshToken=<JWT refresh token>; Path=/; HttpOnly; Expires=Sat, 25 Jun 2022 18:47:25 GMT;'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        allOf:
+                          - $ref: '#/components/schemas/AccessTokenResponse'
+                    required:
+                      - data
+              example:
+                status: 'success'
+                message: 'Successfully logged in as a user'
+                data:
+                  accessToken: '<access JWT token>'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /auth/refresh:
+    post:
+      summary: 'Refreshes the current access token'
+      security:
+        - cookieJwt: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AccessTokenResponse'
+                    required:
+                      - data
+              example:
+                status: 'success'
+                message: 'Successfully refreshed new token'
+                data:
+                  accessToken: '<access JWT token>'
+        '401':
+          $ref: '#/components/responses/NoSessionError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /auth/logout:
+    delete:
+      summary: Logs out from current user account
+      security:
+        - cookieJwt: []
+      description: |
+        This endpoint requires the **refresh token** retrieved from cookies.
+        The refresh token is the key to completely remove the user's token both from
+        the server and client.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: 'success'
+                message: 'Successfully logged out'
+        '401':
+          $ref: '#/components/responses/NoSessionError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users:
+    get:
+      summary: 'Get profile of the current user'
+      security:
+        - bearerJwt: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          user:
+                            $ref: '#/components/schemas/FullUserDTO'
+                        required:
+                          - user
+                    required:
+                      - data
+              example:
+                status: success
+                message: Successfully found user data
+                data:
+                  user:
+                    id: 3
+                    fullName: 'John Doe'
+                    email: 'john_doe@example.com'
+                    phone: '08174991828'
+                    balance: 1000000
+        '401':
+          $ref: '#/components/responses/NoSessionError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      summary: 'Update user profile'
+      security:
+        - bearerJwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: success
+                message: Successfully updated a user profile
+        '401':
+          $ref: '#/components/responses/NoSessionError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/topup:
+    post:
+      summary: 'Add more balance to user'
+      security:
+        - bearerJwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTopupDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: success
+                message: Successfully add topup
+        '401':
+          $ref: '#/components/responses/NoSessionError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/{userId}/products:
+    get:
+      summary: 'Get all products owned by current user'
+      security:
+        - bearerJwt: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          products:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/ProductDTO'
+                        required:
+                          - products
+                    required:
+                      - data
+        '401':
+          $ref: '#/components/responses/NoSessionError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /products:
+    get:
+      summary: 'Get all products'
+      description: |
+        It will only be mentioned here, but each product has their own `types`.
+        It shows as a _number_ value because it's an enum, which are as shown below.\
+        \
+        `1` = Atasan\
+        `2` = Bawahan\
+        `3` = Luaran\
+        `0` = Lainnya (_Extending the types in the future will give more ease_)
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - properties:
+                      data:
+                        type: object
+                        properties:
+                          products:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/ProductDTO'
+                        required:
+                          - products
+                    required:
+                      - data
+              example:
+                status: 'success'
+                message: 'Found all products'
+                data:
+                  products:
+                    - id: 123
+                      name: 'Kaos oblong'
+                      price: 180000
+                      description: 'Kaos paling kekinian sejabar banten'
+                      type: 1
+                      seller:
+                        id: 3
+                        fullName: 'John Doe'
+                        email: 'john_doe@example.com'
+                        phone: '08174991828'
+                      createdAt: '2022-05-26T14:29:07.398Z'
+                      updatedAt: '2022-05-26T18:29:07.398Z'
+                    - id: 124
+                      name: 'Outer korea'
+                      price: 150000
+                      description: 'Outer paling murah sejabar banten'
+                      type: 2
+                      seller:
+                        id: 3
+                        fullName: 'John Doe'
+                        email: 'john_doe@example.com'
+                        phone: '08174991828'
+                      createdAt: '2022-05-26T15:29:07.398Z'
+                      updatedAt: '2022-05-26T18:29:07.398Z'
+        '404':
+            description: 'Product not found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Response'
+                example:
+                  status: 'fail'
+                  message: 'Product not found'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      summary: 'Add a new product'
+      security:
+        - bearerJwt: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductDTO'
+            example:
+              name: 'Kaos Oblong'
+              price: 150000
+              description: 'Kaos oblong paling kekinian sejabar banten'
+              type: 1
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: 'success'
+                message: 'Added new product successfully'
+        '400':
+          description: 'Bad request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: 'fail'
+                message: 'Object or value is invalid'
+        '401':
+          $ref: '#/components/responses/NoPermissionError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /products/{productId}:
+    get:
+      summary: 'Get a specific product'
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          product:
+                            $ref: '#/components/schemas/ProductDTO'
+                        required:
+                          - product
+                    required:
+                      - data
+              example:
+                status: 'success'
+                message: 'Found all products'
+                data:
+                  product:
+                    id: 124
+                    name: 'Outer korea'
+                    price: 150000
+                    description: 'Outer paling murah sejabar banten'
+                    type: 2
+                    seller:
+                      id: 5
+                      fullName: 'Alex Minecraft'
+                      email: 'alex@minecraft.com'
+                      phone: '081892369531'
+                    createdAt: '2022-05-26T15:29:07.398Z'
+                    updatedAt: '2022-05-26T18:29:07.398Z'
+        '404':
+            description: 'Product not found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Response'
+                example:
+                  status: 'fail'
+                  message: 'Product not found'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      summary: 'Update a specific product'
+      security:
+        - bearerJwt: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductDTO'
+            example:
+              name: 'Outer korea'
+              price: 150000
+              description: 'Outer paling murah sejabar banten'
+              type: 2
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: 'success'
+                message: 'Successfully updated product'
+        '404':
+            description: 'Product not found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Response'
+                example:
+                  status: 'fail'
+                  message: 'Product not found'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      summary: 'Delete a product'
+      security:
+        - bearerJwt: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+              example:
+                status: 'success'
+                message: 'Successfully deleted a product'
+        '404':
+            description: 'Product not found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Response'
+                example:
+                  status: 'fail'
+                  message: 'Product not found'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /transactions:
+    post:
+      summary: 'Do payment'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Response'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          product:
+                            $ref: '#/components/schemas/ProductDTO'
+                        required:
+                          - product
+                    required:
+                      - data
+              example:
+                status: 'success'
+                message: 'Found all products'
+                data:
+                  product:
+                    id: 124
+                    name: 'Outer korea'
+                    price: 150000
+                    description: 'Outer paling murah sejabar banten'
+                    type: 2
+                    seller:
+                      id: 5
+                      fullName: 'Alex Minecraft'
+                      email: 'alex@minecraft.com'
+                      phone: '081892369531'
+                    createdAt: '2022-05-26T15:29:07.398Z'
+                    updatedAt: '2022-05-26T18:29:07.398Z'
+        '404':
+            description: 'Product not found'
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Response'
+                example:
+                  status: 'fail'
+                  message: 'Product not found'
+        '500':
+          $ref: '#/components/responses/ServerError'

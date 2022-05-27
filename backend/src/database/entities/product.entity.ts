@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 import { DateTime } from 'luxon';
 import { User } from './user.entity';
 import { CustomEntity } from '../base/entity';
@@ -35,6 +37,9 @@ export class Product extends CustomEntity {
 
     @Column({ length: 1023 })
     description!: string;
+
+    @Column()
+    imageFile!: string;
 
     @Column({
         type: 'enum',
@@ -75,6 +80,11 @@ export class Product extends CustomEntity {
         }
 
         delete clone.userId;
+        delete clone.imageFile;
+
+        const buffer = fs.readFileSync(this.imageFile);
+        clone.imageData = buffer.toString('base64');
+
         return clone;
     }
 
