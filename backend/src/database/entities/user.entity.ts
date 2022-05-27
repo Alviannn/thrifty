@@ -2,14 +2,19 @@ import { dateTransformer } from '.';
 import { DateTime } from 'luxon';
 import {
     BaseEntity, Entity,
-    Column, PrimaryGeneratedColumn
+    Column, PrimaryGeneratedColumn,
+    OneToMany
 } from 'typeorm';
+import { Product } from './product.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @OneToMany(() => Product, (product) => product.id)
+    products!: Product[];
 
     @Column({ name: 'full_name', length: 64 })
     fullName!: string;
