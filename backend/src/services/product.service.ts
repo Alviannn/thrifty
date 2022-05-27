@@ -49,6 +49,24 @@ class ProductService {
         await product.save();
     }
 
+    async delete(userId: number, productId: number) {
+        const product = await Product.findOne({
+            select: ['id'],
+            where: {
+                id: productId,
+                userId
+            }
+        });
+
+        if (!product) {
+            throw new ResponseError(
+                'Product not found',
+                StatusCodes.NOT_FOUND);
+        }
+
+        product.remove();
+    }
+
 }
 
 export const productService = new ProductService();
