@@ -39,7 +39,7 @@ export class ProductRoute {
     }
 
     @ReqHandler('GET', '/')
-    async get(req: Request, res: Response) {
+    async getAll(req: Request, res: Response) {
         const products = await productService.getAll();
 
         return sendResponse(res, {
@@ -87,7 +87,8 @@ export class ProductRoute {
         'PUT', '/:productId',
         authenticate(),
         validate(productIdSchema, 'PARAMS'),
-        validate(updateSchema))
+        validate(updateSchema)
+    )
     async update(req: Request, res: Response) {
         const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as ProductType;
@@ -102,7 +103,8 @@ export class ProductRoute {
     @ReqHandler(
         'DELETE', '/:productId',
         authenticate(),
-        validate(productIdSchema, 'PARAMS'))
+        validate(productIdSchema, 'PARAMS')
+    )
     async delete(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
         const { productId } = req.params as unknown as ProductIdType;
