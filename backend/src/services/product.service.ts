@@ -2,14 +2,10 @@ import { StatusCodes } from 'http-status-codes';
 import { DateTime } from 'luxon';
 import { Product } from '../database/entities/product.entity';
 import { User } from '../database/entities/user.entity';
-import { BargainRequest } from '../database/entities/bargain-request.entity';
 import { Errors, ResponseError } from '../utils/api.util';
 import { IsNull } from 'typeorm';
 
 import type { ProductType } from '../validations/product.validation';
-import type {
-    CreateBargainDTO
-} from '../validations/bargain-request.validation';
 
 class ProductService {
 
