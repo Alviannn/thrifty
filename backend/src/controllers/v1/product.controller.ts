@@ -23,7 +23,7 @@ import type {
     ProductIdType
 } from '../../validations/product.validation';
 
-@Controller({ path: 'product' })
+@Controller({ path: 'products' })
 export class ProductRoute {
 
     @ReqHandler('POST', '/', authenticate(), validate(addSchema))
