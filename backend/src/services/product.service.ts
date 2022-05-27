@@ -17,7 +17,14 @@ class ProductService {
     }
 
     async getAll() {
-        const products = await Product.findBy({ deletedAt: IsNull() });
+        const products = await Product.find({
+            where: {
+                deletedAt: IsNull()
+            },
+            relations: {
+                user: true
+            }
+        });
         return products;
     }
 
