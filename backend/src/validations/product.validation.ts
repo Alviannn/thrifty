@@ -11,6 +11,12 @@ export interface ProductIdType {
     productId: number;
 }
 
+export const productIdSchema = joi.object<ProductIdType>({
+    productId: joi.number()
+        .min(0)
+        .required()
+});
+
 export const addSchema = joi.object<ProductType>({
     name: joi.string()
         .max(64)
