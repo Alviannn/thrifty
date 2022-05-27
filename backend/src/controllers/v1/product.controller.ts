@@ -1,14 +1,21 @@
+import validate from '../../middlewares/validate.middleware';
+import authenticate from '../../middlewares/authenticate.middleware';
+
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { productService } from '../../services/product.service';
+import { sendResponse } from '../../utils/api.util';
+import { bargainSchema } from '../../validations/bargain-request.validation';
+import { productIdSchema } from '../../validations/product.validation';
+
 import {
     Controller, ReqHandler
 } from '../../internals/decorators/express.decorator';
-import authenticate from '../../middlewares/authenticate.middleware';
-import { productService } from '../../services/product.service';
-import { sendResponse } from '../../utils/api.util';
+
+import type { ProductType } from '../../validations/product.validation';
 import type {
-    ProductIdType, ProductType
-} from '../../validations/product.validation';
+    CreateBargainDTO
+} from '../../validations/bargain-request.validation';
 
 @Controller({ path: 'product' })
 export class ProductRoute {
@@ -35,6 +42,24 @@ export class ProductRoute {
             data: {
                 products
             }
+        });
+    }
+
+    @ReqHandler(
+        'POST', '/{productId}/bargain',
+        authenticate(),
+        validate(productIdSchema, 'PARAMS'),
+        validate(bargainSchema, 'BODY')
+    )
+    async bargain(req: Request, res: Response) {
+        const userId = req.userPayload!.id;
+        const productId = parseInt(req.params.id);
+        const body = req.body as CreateBargainDTO;
+
+        await productService.bargain(userId, productId, body);
+
+        return sendResponse(res, {
+            message: 'Sent bargain price request for current product!',
         });
     }
 
