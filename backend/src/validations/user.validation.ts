@@ -35,6 +35,13 @@ export interface LoginType {
     password: string;
 }
 
+export interface UpdateType {
+    password: string;
+    fullName: string;
+    phone: string;
+    address: string;
+}
+
 export interface RegisterType extends LoginType {
     fullName: string;
     phone: string;
@@ -82,4 +89,20 @@ export const registerSchema = joi.object<RegisterType>({
     address: joi.string()
         .max(64)
         .required()
+});
+
+export const updateSchema = joi.object<UpdateType>({
+    password: passwordSchema,
+
+    fullName: joi.string()
+        .max(64),
+
+    phone: joi.string()
+        .max(32)
+
+        .custom(validatePhone)
+        .rule({ message: '{#label} must only be numbers' }),
+
+    address: joi.string()
+        .max(64)
 });

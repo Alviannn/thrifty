@@ -47,6 +47,7 @@ class ProductService {
     }
 
     async update(userId: number, productId: number, rawProduct: ProductType) {
+        const { name, price, description, type } = rawProduct;
         const product = await Product.findOneBy({ id: productId });
 
         if (!product) {
@@ -58,10 +59,10 @@ class ProductService {
             throw Errors.NO_PERMISSION;
         }
 
-        product.name = rawProduct.name ?? product.name;
-        product.price = rawProduct.price ?? product.price;
-        product.description = rawProduct.description ?? product.description;
-        product.type = rawProduct.type ?? product.type;
+        product.name = name ?? product.name;
+        product.price = price ?? product.price;
+        product.description = description ?? product.description;
+        product.type = type ?? product.type;
         product.updatedAt = DateTime.utc();
 
         await product.save();
