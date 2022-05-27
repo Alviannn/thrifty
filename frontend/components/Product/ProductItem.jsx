@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowRight, FaPencilAlt } from "react-icons/fa";
 
 const Card = styled.div`
 	height: 400px;
@@ -28,6 +28,12 @@ const DetailButton = styled.a`
 	&:hover {
 		transform: translateX(10px);
 	}
+`;
+
+const EditButton = styled.a`
+    position: absolute;
+    top: 10px;
+    right: 10px;
 `;
 
 const ProductItem = ({ item }) => {
@@ -61,6 +67,9 @@ const ProductItem = ({ item }) => {
 						Lihat Detail <FaArrowRight />
 					</DetailButton>
 				</Link>
+                <Link href={`/products/edit/${item.id}`}>
+                    <EditButton className="btn btn-warning"><FaPencilAlt /></EditButton>
+                </Link>
 			</div>
 		</Card>
 	);
