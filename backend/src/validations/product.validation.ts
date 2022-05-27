@@ -1,6 +1,4 @@
-import joi from 'joi';
-
-export interface product {
+export interface ProductType {
     name: string;
     decription: string;
     price: number;
