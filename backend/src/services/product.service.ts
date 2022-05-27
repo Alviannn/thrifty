@@ -2,8 +2,13 @@ import { StatusCodes } from 'http-status-codes';
 import { DateTime } from 'luxon';
 import { Product } from '../database/entities/product.entity';
 import { User } from '../database/entities/user.entity';
+import { BargainRequest } from '../database/entities/bargain-request.entity';
 import { ResponseError } from '../utils/api.util';
+
 import type { ProductType } from '../validations/product.validation';
+import type {
+    CreateBargainDTO
+} from '../validations/bargain-request.validation';
 
 class ProductService {
 
@@ -14,13 +19,30 @@ class ProductService {
         await product.save();
     }
 
-    async get() {
+    async getAll() {
         const products = await Product.find();
 
         return products;
     }
 
+    async bargain(
+        userId: number, productId: number,
+        bargain: CreateBargainDTO) {
+
+        const user = await User.findOneByOrFail({ id: userId });
+        const product = await Product.findOneByOrFail({ id: productId });
+
+        const bargainReq = BargainRequest.create({
+            user,
+            product,
+            ...bargain
+        });
+
+        await bargainReq.save();
+    }
+
     async getById(productId: number) {
+        console.log(productId);
         const product = await Product.findOneBy({ id: productId });
         if (!product) {
             throw new ResponseError(
@@ -41,11 +63,29 @@ class ProductService {
 
         product.name = rawProduct.name ?? product.name;
         product.price = rawProduct.price ?? product.price;
-        product.description = rawProduct.decription ?? product.description;
+        product.description = rawProduct.description ?? product.description;
         product.type = rawProduct.type ?? product.type;
         product.updatedAt = DateTime.utc();
 
         await product.save();
+    }
+
+    async delete(userId: number, productId: number) {
+        const product = await Product.findOne({
+            select: ['id'],
+            where: {
+                id: productId,
+                userId
+            }
+        });
+
+        if (!product) {
+            throw new ResponseError(
+                'Product not found',
+                StatusCodes.NOT_FOUND);
+        }
+
+        product.remove();
     }
 
 }
