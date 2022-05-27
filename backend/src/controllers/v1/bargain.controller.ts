@@ -1,23 +1,27 @@
-import { Request, Response } from 'express';
-import {
-    Controller,
-    ReqHandler
-} from '../../internals/decorators/express.decorator';
 import authenticate from '../../middlewares/authenticate.middleware';
 import validate from '../../middlewares/validate.middleware';
 import { bargainService } from '../../services/bargain.service';
 import { sendResponse } from '../../utils/api.util';
-import type {
-    BargainIdDTO, CreateBargainDTO, UpdateBargainDTO
-} from '../../validations/bargain-request.validation';
+import { Request, Response } from 'express';
+
+import {
+    Controller,
+    ReqHandler
+} from '../../internals/decorators/express.decorator';
+
 import {
     bargainIdSchema, bargainSchema, updateBargainSchema
 } from '../../validations/bargain-request.validation';
-import type { ProductIdType } from '../../validations/product.validation';
+
 import {
     productIdSchema
 } from '../../validations/product.validation';
 
+import type { ProductIdType } from '../../validations/product.validation';
+
+import type {
+    BargainIdDTO, CreateBargainDTO, UpdateBargainDTO
+} from '../../validations/bargain-request.validation';
 
 @Controller({ path: 'bargains' })
 export class BargainRequestRoute {
