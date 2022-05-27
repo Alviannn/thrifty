@@ -13,10 +13,15 @@ import {
 import registerSchema from "../../validations/register-validation";
 import RegisterFormInput from "./RegisterFormInput";
 import axios from "axios";
+import { useRouter } from "next/router";
+import GagalPop from "../Popup/GagalPop";
+import BerhasilPop from "../Popup/BerhasilPop";
 
 const FormInputContext = createContext();
 
 const RegisterForm = () => {
+	const router = useRouter();
+
 	const [data, setData] = useState({
 		fullName: "",
 		address: "",
@@ -36,7 +41,6 @@ const RegisterForm = () => {
 			phone: data.phone,
 			address: data.address,
 		});
-
 		axios
 			.post("http://localhost:5000/v1/auth/register", json, {
 				headers: {
@@ -45,9 +49,13 @@ const RegisterForm = () => {
 			})
 			.then((res) => {
 				console.log(res);
+				const popup = "Register Berhasil! Silahkan login!";
+				BerhasilPop(popup);
 			})
 			.catch((err) => {
 				console.log(err);
+				const popup = "Register Gagal! Silahkan coba lagi!";
+				GagalPop(popup);
 			});
 	};
 
@@ -65,7 +73,6 @@ const RegisterForm = () => {
 			}
 			setErrors(errorData);
 		} else {
-			console.log("register");
 			Register();
 		}
 	};

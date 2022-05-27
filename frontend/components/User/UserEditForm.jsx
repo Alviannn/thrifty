@@ -13,48 +13,85 @@ import {
 	FaPhoneAlt,
 	FaTag,
 	FaUser,
+	FaKey,
 } from "react-icons/fa";
 import userEditSchema from "../../validations/user-edit-validation";
+import registerSchema from "../../validations/register-validation";
 import UserEditFormInput from "./UserEditFormInput";
+import { useAuth } from "../../contexts/auth";
+import axios from "axios";
 
 const FormInputContext = createContext();
 
 const UserEditForm = () => {
+	const { profile, accessToken } = useAuth();
+
 	const [data, setData] = useState({
-		Nama: "",
-		Email: "",
-		Phone: "",
-		Address: "",
+		Nama: profile.fullName,
+		Email: profile.email,
+		Phone: profile.phone,
+		Address: profile.address,
 	});
 	const [errors, setErrors] = useState(false);
 
+	const updateProfile = () => {
+		axios
+			.put(
+				"http://localhost:5000/v1/users",
+				{
+					fullName: data.Nama,
+					phone: data.Phone,
+					address: data.Address,
+				},
+				{
+					headers: {
+						authorization: `Bearer ${accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	const validateForm = (e) => {
-		const result = userEditSchema.validate(data, { abortEarly: false });
+		const result = registerSchema.validate(data, { abortEarly: false });
 		const { error } = result;
 
-		if (error) {
-			e.preventDefault();
+		updateProfile();
+		// if (error) {
+		// 	e.preventDefault();
 
-			const errorData = {};
+		// 	const errorData = {};
 
-			for (const err of error.details) {
-				const name = err.path[0];
-				const message = err.message;
-				errorData[name] = message;
-			}
+		// 	for (const err of error.details) {
+		// 		const name = err.path[0];
+		// 		const message = err.message;
+		// 		errorData[name] = message;
+		// 	}
 
-			setErrors(errorData);
-		}
+		// 	setErrors(errorData);
+		// } else {
+		// }
 	};
 
 	return (
 		<>
-			<form action="/users/update" method="POST" className="text-lg-start text-center">
+			<div className="text-lg-start text-center">
 				<div className="row">
 					<FormInputContext.Provider value={{ data, setData, errors }}>
 						<div className="col-lg-6 col-12">
-							<UserEditFormInput propKey="Nama" icon={<FaTag className="text-gold" />} readOnly={false} />
 							<UserEditFormInput
+								type="text"
+								propKey="Nama"
+								icon={<FaTag className="text-gold" />}
+								readOnly={false}
+							/>
+							<UserEditFormInput
+								type="text"
 								propKey="Email"
 								icon={<FaEnvelope className="text-gold" />}
 								readOnly={true}
@@ -62,12 +99,14 @@ const UserEditForm = () => {
 						</div>
 						<div className="col-lg-6 col-12">
 							<UserEditFormInput
-								propKey="Nomor Telepon"
+								type="text"
+								propKey="Phone"
 								icon={<FaPhoneAlt className="text-gold" />}
 								readOnly={false}
 							/>
 							<UserEditFormInput
-								propKey="Alamat"
+								type="text"
+								propKey="Address"
 								icon={<FaMapMarkerAlt className="text-gold" />}
 								readOnly={false}
 							/>
@@ -82,7 +121,7 @@ const UserEditForm = () => {
 						<FaArrowLeft /> Back
 					</a>
 				</Link>
-			</form>
+			</div>
 		</>
 	);
 };

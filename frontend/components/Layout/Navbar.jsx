@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
+import { FaShoppingCart, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import styled from "styled-components";
-import { useState } from "react";
-import { FaUser } from "react-icons/fa";
+import react, { useState } from "react";
+import { CgProfile } from "react-icons/cg";
+import { useAuth } from "../../contexts/auth";
 
 const Nav = styled.nav`
 	z-index: 1;
@@ -27,7 +28,7 @@ const ProfileText = styled.p`
 
 const Navbar = () => {
 	const [loggedIn, setLoggedIn] = useState(false);
-
+	const { profile, isAuthenticated, loading } = useAuth();
 	return (
 		<>
 			<Nav className="navbar navbar-expand-lg navbar-light bg-transparent position-absolute w-100 mb-3 text-black">
@@ -60,22 +61,26 @@ const Navbar = () => {
 									</a>
 								</Link>
 							</li>
-							<li className="nav-item py-2">
-								<Link href="/tokosaya">
-									<a
-										className={`fs-5 mx-4 text-decoration-none navbar-brand`}
-										style={{ color: "#A0A0A0" }}
-									>
-										Toko Saya
-									</a>
-								</Link>
-							</li>
+							{isAuthenticated && (
+								<>
+									<li className="nav-item py-2">
+										<Link href={`/profile/${profile.id}`}>
+											<a
+												className={`fs-5 mx-4 text-decoration-none navbar-brand`}
+												style={{ color: "#A0A0A0" }}
+											>
+												Toko Saya
+											</a>
+										</Link>
+									</li>
+								</>
+							)}
 						</ul>
 						<form
 							className="d-flex ms-auto position-relative nav-item"
 							style={{ paddingTop: "5px", paddingBottom: "5px" }}
 						>
-							{!loggedIn && (
+							{!isAuthenticated && (
 								<div className="ms-3" style={{ paddingTop: "11px", paddingBottom: "11px" }}>
 									<Link href="/register">
 										<button className="btn mx-2 btn-brown">
@@ -89,16 +94,16 @@ const Navbar = () => {
 									</Link>
 								</div>
 							)}
-							{loggedIn && (
-                                <div style={{ marginLeft: "10px" }}>
-                                    <Link href="/profile">
-                                        <button className="btn btn-brown">
-                                            <ProfileText>
-                                                <FaUser /> Fabian Habil
-                                            </ProfileText>
-                                        </button>
-                                    </Link>
-                                </div>
+							{isAuthenticated && profile && (
+								<div style={{ marginLeft: "10px" }}>
+									<Link href="/profile">
+										<button className="btn">
+											<ProfileText>
+												<CgProfile /> {profile.fullName}
+											</ProfileText>
+										</button>
+									</Link>
+								</div>
 							)}
 						</form>
 					</div>

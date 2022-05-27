@@ -1,7 +1,8 @@
 import Head from "next/head";
-import Link from "next/link";
 import styled from "styled-components";
-import { FaArrowRight } from "react-icons/fa";
+import { FiArrowRight } from "react-icons/fi";
+import Link from "next/link";
+import { useAuth } from "../contexts/auth";
 
 const Tagline = styled.h1`
 	font-size: 4vw;
@@ -18,13 +19,30 @@ const Img = styled.img`
 	height: 100%;
 `;
 
+const TextButton = styled.p`
+	padding: 0;
+	margin: 0;
+	font-size: 20px;
+	@media (max-width: 470px) {
+		font-size: 14px;
+	}
+	@media (max-width: 360px) {
+		font-size: 10px;
+	}
+	@media (max-width: 320px) {
+		font-size: 9px;
+	}
+`;
+
 const Home = () => {
+	const { profile } = useAuth();
+
 	return (
 		<>
 			<Head>
 				<title>thrifty!</title>
 			</Head>
-			<div className="row min-vh-100 align-items-center text-black py-5">
+			<div className="row min-vh-100 align-items-center text-black pt-md-2 pb-md-4">
 				<div className="col-lg-6 col-12">
 					<Img src="/img/thrift.png" className="d-block ms-auto" alt="Scrolling" />
 				</div>
@@ -35,8 +53,10 @@ const Home = () => {
 					<Tagline>andalan</Tagline>
 					<Tagline style={{ color: "#B05C3C" }}>anda</Tagline>
 					<Link href="/products">
-						<button className="btn btn-mocca mt-2 btn-lg">
-							Cari Produk <FaArrowRight />
+						<button className="btn btn-mocca mt-2 btn-lg" style={{ width: "50%" }}>
+							<TextButton>
+								Cari Produk <FiArrowRight />
+							</TextButton>
 						</button>
 					</Link>
 				</div>

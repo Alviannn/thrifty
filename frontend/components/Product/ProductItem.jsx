@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styled from "styled-components";
 import { FaArrowRight, FaPencilAlt } from "react-icons/fa";
+import { useAuth } from "../../contexts/auth";
 
 const Card = styled.div`
 	height: 400px;
@@ -31,12 +32,13 @@ const DetailButton = styled.a`
 `;
 
 const EditButton = styled.a`
-    position: absolute;
-    top: 10px;
-    right: 10px;
+	position: absolute;
+	top: 10px;
+	right: 10px;
 `;
 
 const ProductItem = ({ item }) => {
+	const { isAuthenticated } = useAuth();
 	return (
 		<Card className="card m-2 p-2">
 			<CardImage>
@@ -67,9 +69,15 @@ const ProductItem = ({ item }) => {
 						Lihat Detail <FaArrowRight />
 					</DetailButton>
 				</Link>
-                <Link href={`/products/edit/${item.id}`}>
-                    <EditButton className="btn btn-warning"><FaPencilAlt /></EditButton>
-                </Link>
+				{isAuthenticated && (
+					<>
+						<Link href={`/products/edit/${item.id}`}>
+							<EditButton className="btn btn-warning">
+								<FaPencilAlt />
+							</EditButton>
+						</Link>
+					</>
+				)}
 			</div>
 		</Card>
 	);
