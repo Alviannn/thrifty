@@ -6,7 +6,7 @@ dotenv.config();
 
 const { env } = process;
 const corsOption: CorsOptions = {
-    origin: '*',
+    origin: ['http://localhost:3000'],
     /** Some legacy browsers (IE11, various SmartTVs) choke on 204 */
     optionsSuccessStatus: 200,
     preflightContinue: true,
