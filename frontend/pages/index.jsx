@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styled from "styled-components";
 import { FiArrowRight } from "react-icons/fi";
+import Link from "next/link";
 
 const Tagline = styled.h1`
 	font-size: 4vw;
@@ -48,11 +49,13 @@ const Home = () => {
 					</Tagline>
 					<Tagline>andalan</Tagline>
 					<Tagline style={{ color: "#B05C3C" }}>anda</Tagline>
-					<button className="btn btn-mocca mt-2 btn-lg" style={{ width: "50%" }}>
-						<TextButton>
-							Cari Produk <FiArrowRight />
-						</TextButton>
-					</button>
+					<Link href="/products">
+						<button className="btn btn-mocca mt-2 btn-lg" style={{ width: "50%" }}>
+							<TextButton>
+								Cari Produk <FiArrowRight />
+							</TextButton>
+						</button>
+					</Link>
 				</div>
 			</div>
 		</>

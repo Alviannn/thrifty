@@ -51,7 +51,7 @@ const Navbar = () => {
 					<div className="collapse navbar-collapse mt-lg-0 mt-2 pb-lg-0 rounded" id="navbarNav">
 						<ul className="navbar-nav">
 							<li className="nav-item py-2">
-								<Link href="/produk">
+								<Link href="/products">
 									<a
 										className={`fs-5 mx-4 text-decoration-none navbar-brand`}
 										style={{ color: "#A0A0A0" }}
