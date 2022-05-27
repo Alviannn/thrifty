@@ -15,6 +15,16 @@ a {
 	font-family: "Archivo";
 }
 
+::-moz-selection {
+    background-color: #B05C3C;
+    color: #fff;
+}
+
+::selection {
+    background-color: #B05C3C;
+    color: #fff;
+}
+
 .bg-dark-brown {
     background-color: #753523 !important;
 }
