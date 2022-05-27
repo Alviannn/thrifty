@@ -12,7 +12,12 @@ import {
     Controller,
     ReqHandler
 } from '../../internals/decorators/express.decorator';
-import type { UpdateType, UserIdType } from '../../validations/user.validation';
+
+import type {
+    UserUpdateDTO,
+    UserIdType
+} from '../../validations/user.validation';
+
 import { updateSchema, userIdSchema } from '../../validations/user.validation';
 import { productService } from '../../services/product.service';
 
@@ -62,7 +67,7 @@ export class UserRoute {
     @ReqHandler('PUT', '/', authenticate(), validate(updateSchema))
     async update(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
-        const body = req.body as UpdateType;
+        const body = req.body as UserUpdateDTO;
 
         await userService.update(userId, body);
 

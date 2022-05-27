@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { User } from '../database/entities/user.entity';
 import { Errors } from '../utils/api.util';
-import type { UpdateType } from '../validations/user.validation';
+import type { UserUpdateDTO } from '../validations/user.validation';
 
 class UserService {
 
@@ -21,7 +21,7 @@ class UserService {
         user.save();
     }
 
-    async update(userId: number, rawUser: UpdateType) {
+    async update(userId: number, rawUser: UserUpdateDTO) {
         const { password, fullName, phone, address } = rawUser;
         const user = await User.findOneBy({ id: userId });
 
