@@ -82,8 +82,7 @@ export class Product extends CustomEntity {
         delete clone.userId;
         delete clone.imageFile;
 
-        const buffer = fs.readFileSync(this.imageFile);
-        clone.imageData = buffer.toString('base64');
+        clone.image = fs.readFileSync(this.imageFile, { encoding: 'utf8' });
 
         return clone;
     }

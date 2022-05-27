@@ -21,15 +21,17 @@ class ProductService {
         const user = (await User.findOneByOrFail({ id: userId }))!;
         const product = Product.create({ ...rawProduct, user });
 
-        const buffer = Buffer.from(imageData, 'base64');
-
         const imageFile = `img/${nanoid()}`;
         product.imageFile = imageFile;
 
         await product.save();
 
-        await fsp.mkdir('img');
-        await fsp.writeFile(imageFile, buffer);
+        try {
+            await fsp.mkdir('img');
+        } catch (err) {
+            // ignore
+        }
+        await fsp.writeFile(imageFile, imageData);
     }
 
     async getAll() {
@@ -120,8 +122,10 @@ class ProductService {
             throw Errors.NO_PERMISSION;
         }
 
-        product.deletedAt = DateTime.utc();
-        await product.save();
+        await product.remove();
+
+        // product.deletedAt = DateTime.utc();
+        // await product.save();
     }
 
 }
