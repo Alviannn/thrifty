@@ -22,6 +22,19 @@ import {
 @Controller({ path: 'bargains' })
 export class BargainRequestRoute {
 
+    @ReqHandler('GET', '/', authenticate())
+    async allOwned(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const bargains = await bargainService.allOwned(userId);
+
+        return sendResponse(res, {
+            message: 'Found requested bargains',
+            data: {
+                bargains
+            }
+        });
+    }
+
     @ReqHandler(
         'GET', '/:productId',
         authenticate(),

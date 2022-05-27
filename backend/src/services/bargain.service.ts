@@ -68,6 +68,19 @@ class BargainService {
         await bargain.save();
     }
 
+    async allOwned(userId: number) {
+        const bargains = await BargainRequest.find({
+            where: {
+                user: { id: userId }
+            },
+            relations: {
+                user: true
+            }
+        });
+
+        return bargains;
+    }
+
 }
 
 export const bargainService = new BargainService();
