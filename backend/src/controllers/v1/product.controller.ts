@@ -55,10 +55,10 @@ export class ProductRoute {
         'POST', '/:productId/bargain',
         authenticate(),
         validate(productIdSchema, 'PARAMS'),
-        validate(bargainSchema, 'BODY')
+        validate(bargainSchema)
     )
     async bargain(req: Request, res: Response) {
-        const userId = req.userPayload!.id;
+        const { id: userId } = req.userPayload!;
         const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as CreateBargainDTO;
 
@@ -69,7 +69,7 @@ export class ProductRoute {
         });
     }
 
-    @ReqHandler('GET', '/:productId')
+    @ReqHandler('GET', '/:productId', validate(productIdSchema, 'PARAMS'))
     async getById(req: Request, res: Response) {
         const { productId } = req.params as unknown as ProductIdType;
 
@@ -83,7 +83,10 @@ export class ProductRoute {
         });
     }
 
-    @ReqHandler('PUT', '/:productId', validate(updateSchema))
+    @ReqHandler(
+        'PUT', '/:productId',
+        validate(productIdSchema, 'PARAMS'),
+        validate(updateSchema))
     async update(req: Request, res: Response) {
         const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as ProductType;
@@ -95,7 +98,10 @@ export class ProductRoute {
         });
     }
 
-    @ReqHandler('DELETE', '/:productId', authenticate())
+    @ReqHandler(
+        'DELETE', '/:productId',
+        validate(productIdSchema, 'PARAMS'),
+        authenticate())
     async delete(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
         const { productId } = req.params as unknown as ProductIdType;
