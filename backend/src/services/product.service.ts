@@ -29,7 +29,16 @@ class ProductService {
     }
 
     async getById(productId: number) {
-        const product = await Product.findOneBy({ id: productId });
+        const product = await Product.findOne({
+            where: {
+                id: productId,
+                deletedAt: IsNull()
+            },
+            relations: {
+                user: true
+            }
+        });
+
         if (!product) {
             throw new ResponseError(
                 'Product not found',
@@ -39,7 +48,7 @@ class ProductService {
         return product;
     }
 
-    async getByUserId(userId: number) {
+    async getByUsers(userId: number) {
         const user = await User.findOneBy({ id: userId });
 
         if (!user) {
@@ -48,13 +57,21 @@ class ProductService {
                 StatusCodes.NOT_FOUND);
         }
 
-        const products = await Product.findBy({ userId });
+        const products = await Product.findOne({
+            where: {
+                userId,
+                deletedAt: IsNull()
+            },
+            relations: {
+                user: true
+            }
+        });
 
         return products;
     }
 
-    async update(userId: number, productId: number, rawProduct: ProductType) {
-        const { name, price, description, type } = rawProduct;
+    async update(userId: number, productId: number, dto: ProductType) {
+        const { name, price, description, type } = dto;
         const product = await Product.findOneBy({ id: productId });
 
         if (!product) {

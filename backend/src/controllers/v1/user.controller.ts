@@ -49,7 +49,7 @@ export class UserRoute {
     async getByUserId(req: Request, res: Response) {
         const { userId } = req.params as unknown as UserIdType;
 
-        const products = await productService.getByUserId(userId);
+        const products = await productService.getByUsers(userId);
 
         return sendResponse(res, {
             message: 'Successfully found all products',
