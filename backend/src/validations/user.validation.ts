@@ -105,5 +105,4 @@ export const updateSchema = joi.object<UpdateType>({
 
     address: joi.string()
         .max(64)
-        .required()
 });
