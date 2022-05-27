@@ -34,6 +34,7 @@ export interface LoginType {
 export interface RegisterType extends LoginType {
     fullName: string;
     phone: string;
+    address: string;
 }
 
 export const loginSchema = joi.object<LoginType>({
@@ -66,5 +67,9 @@ export const registerSchema = joi.object<RegisterType>({
         .custom(validatePhone)
         .rule({ message: '{#label} must only be numbers' })
 
+        .required(),
+
+    address: joi.string()
+        .max(64)
         .required()
 });

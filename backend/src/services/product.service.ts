@@ -1,5 +1,7 @@
+import { StatusCodes } from 'http-status-codes';
 import { Product } from '../database/entities/product.entity';
 import { User } from '../database/entities/user.entity';
+import { ResponseError } from '../utils/api.util';
 import type { ProductType } from '../validations/product.validation';
 
 class ProductService {
@@ -15,6 +17,17 @@ class ProductService {
         const products = await Product.find();
 
         return products;
+    }
+
+    async getById(productId: number) {
+        const product = Product.findOneBy({ id: productId });
+        if (!product) {
+            throw new ResponseError(
+                'Product not found',
+                StatusCodes.NOT_FOUND);
+        }
+
+        return product;
     }
 
 }

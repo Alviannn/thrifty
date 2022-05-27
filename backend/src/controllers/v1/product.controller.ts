@@ -38,4 +38,18 @@ export class ProductRoute {
         });
     }
 
+    @ReqHandler('GET', '/:productId')
+    async getById(req: Request, res: Response) {
+        const { id: productId } = req.params as unknown as ProductIdType;
+
+        const product = await productService.getById(productId);
+
+        return sendResponse(res, {
+            message: 'Successfully found product',
+            data: {
+                product
+            }
+        });
+    }
+
 }
