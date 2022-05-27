@@ -1,13 +1,14 @@
 import { DateTime } from 'luxon';
+import { CustomEntity } from '../base/entity';
+import { Product } from './product.entity';
 import {
-    BaseEntity, Entity,
+    Entity,
     Column, PrimaryGeneratedColumn,
     OneToMany
 } from 'typeorm';
-import { Product } from './product.entity';
 
 @Entity('users')
-export class User extends BaseEntity {
+export class User extends CustomEntity {
 
     @PrimaryGeneratedColumn()
     id!: number;
@@ -46,11 +47,18 @@ export class User extends BaseEntity {
     })
     updatedAt?: DateTime;
 
-    toJSON() {
-        const cloned = { ...this } as Record<string, unknown>;
-        delete cloned.password;
+    toSimple(): Record<string, unknown> {
+        return {
+            id: this.id,
+            fullName: this.fullName,
+            email: this.email,
+            phone: this.phone
+        };
+    }
 
-        return cloned;
+    toJSON(): CustomEntity {
+        this.hideProperty('password');
+        return this;
     }
 
 }

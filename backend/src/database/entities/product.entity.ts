@@ -1,7 +1,10 @@
 import { DateTime } from 'luxon';
 import { User } from './user.entity';
+import { CustomEntity } from '../base/entity';
 import {
-    BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn
+    Entity,
+    Column, JoinColumn, PrimaryGeneratedColumn,
+    ManyToOne
 } from 'typeorm';
 
 export enum ProductType {
@@ -12,7 +15,7 @@ export enum ProductType {
 }
 
 @Entity('products')
-export class Product extends BaseEntity {
+export class Product extends CustomEntity {
 
     @PrimaryGeneratedColumn()
     id!: number;
@@ -58,5 +61,21 @@ export class Product extends BaseEntity {
         nullable: true
     })
     deletedAt?: DateTime;
+
+    toSimple(): Record<string, unknown> {
+        throw Error('Method not implemented.');
+    }
+
+    toJSON(): Record<string, unknown> {
+        const clone = { ...this } as Record<string, unknown>;
+
+        if ('user' in clone) {
+            delete clone.user;
+            clone.seller = this.user.toSimple();
+        }
+
+        delete clone.userId;
+        return clone;
+    }
 
 }
