@@ -31,7 +31,7 @@ export class User extends BaseEntity {
     @Column({ length: 64 })
     address!: string;
 
-    @Column('decimal')
+    @Column('decimal', { default: 0 })
     balance!: number;
 
     @Column({

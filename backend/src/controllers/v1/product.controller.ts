@@ -6,7 +6,7 @@ import { StatusCodes } from 'http-status-codes';
 import { productService } from '../../services/product.service';
 import { sendResponse } from '../../utils/api.util';
 import { bargainSchema } from '../../validations/bargain-request.validation';
-import { productIdSchema } from '../../validations/product.validation';
+import { productIdSchema, ProductIdType } from '../../validations/product.validation';
 
 import {
     Controller, ReqHandler
@@ -59,7 +59,33 @@ export class ProductRoute {
         await productService.bargain(userId, productId, body);
 
         return sendResponse(res, {
-            message: 'Sent bargain price request for current product!',
+            message: 'Sent bargain price request for current product!'
+        });
+    }
+
+    @ReqHandler('GET', '/:productId')
+    async getById(req: Request, res: Response) {
+        const { id: productId } = req.params as unknown as ProductIdType;
+
+        const product = await productService.getById(productId);
+
+        return sendResponse(res, {
+            message: 'Successfully found product',
+            data: {
+                product
+            }
+        });
+    }
+
+    @ReqHandler('PUT', '/:productId')
+    async update(req: Request, res: Response) {
+        const { id: productId } = req.params as unknown as ProductIdType;
+        const body = req.body as ProductType;
+
+        await productService.update(productId, body);
+
+        return sendResponse(res, {
+            message: 'Successfully update product'
         });
     }
 
