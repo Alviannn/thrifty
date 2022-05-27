@@ -1,8 +1,12 @@
 import authenticate from '../../middlewares/authenticate.middleware';
+import validate from '../../middlewares/validate.middleware';
 
 import { Request, Response } from 'express';
 import { sendResponse } from '../../utils/api.util';
 import { userService } from '../../services/user.service';
+import { topupSchema } from '../../validations/topup.validation';
+
+import type { TopupType } from '../../validations/topup.validation';
 
 import {
     Controller,
@@ -20,6 +24,21 @@ export class UserRoute {
         return sendResponse(res, {
             message: 'Successfully found user data',
             data: { user }
+        });
+    }
+
+    @ReqHandler(
+        'POST', '/topup',
+        authenticate(), validate(topupSchema)
+    )
+    async topup(req: Request, res: Response) {
+        const { balance } = req.body as TopupType;
+        const { id } = req.userPayload!;
+
+        await userService.topup(id, balance);
+
+        return sendResponse(res, {
+            message: 'Successfully add topup'
         });
     }
 
