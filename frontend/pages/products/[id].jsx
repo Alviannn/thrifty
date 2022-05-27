@@ -84,9 +84,31 @@ const ProductDetails = () => {
 								<h6 className="text-brown">{item.description}</h6>
 								<h5 className="mb-3">Rp. {item.price}</h5>
 								{!owner && (
-									<button className="btn btn-brown">
-										<FaDollarSign /> Tawar Harga
-									</button>
+                                    <>
+                                        <button className="btn btn-brown"  data-bs-toggle="modal" data-bs-target="#exampleModal"><FaDollarSign /> Tawar Harga</button>
+
+                                        <div class="modal fade justify-content-center" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Tawar Harga</h5>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div className="form-group mb-3">
+                                                            <span className="me-2 mt-1 position-absolute text-mocca"><FaDollarSign /></span>
+                                                            <input type="text" className="form-control bg-transparent w-75 ps-4 border-0 border-bottom rounded-0 d-inline text-dark-brown" placeholder="Masukkan tawaran anda" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-mocca" data-bs-dismiss="modal">Batal</button>
+                                                        <form action="/bargain" method="PUT">
+                                                            <button type="submit" class="btn btn-brown">Tawar</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </>
 								)}
 								{owner && (
 									<>
