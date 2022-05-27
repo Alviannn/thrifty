@@ -19,7 +19,7 @@ class ProductService {
         await product.save();
     }
 
-    async get() {
+    async getAll() {
         const products = await Product.find();
 
         return products;
