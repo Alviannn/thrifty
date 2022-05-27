@@ -5,7 +5,6 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { productService } from '../../services/product.service';
 import { sendResponse } from '../../utils/api.util';
-import { bargainSchema } from '../../validations/bargain-request.validation';
 import {
     productIdSchema,
     addSchema,
@@ -16,14 +15,11 @@ import {
     Controller, ReqHandler
 } from '../../internals/decorators/express.decorator';
 import type {
-    CreateBargainDTO
-} from '../../validations/bargain-request.validation';
-import type {
     ProductType,
     ProductIdType
 } from '../../validations/product.validation';
 
-@Controller({ path: 'product' })
+@Controller({ path: 'products' })
 export class ProductRoute {
 
     @ReqHandler('POST', '/', authenticate(), validate(addSchema))
@@ -48,24 +44,6 @@ export class ProductRoute {
             data: {
                 products
             }
-        });
-    }
-
-    @ReqHandler(
-        'POST', '/:productId/bargain',
-        authenticate(),
-        validate(productIdSchema, 'PARAMS'),
-        validate(bargainSchema)
-    )
-    async bargain(req: Request, res: Response) {
-        const { id: userId } = req.userPayload!;
-        const { productId } = req.params as unknown as ProductIdType;
-        const body = req.body as CreateBargainDTO;
-
-        await productService.bargain(userId, productId, body);
-
-        return sendResponse(res, {
-            message: 'Sent bargain price request for current product!'
         });
     }
 

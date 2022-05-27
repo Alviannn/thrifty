@@ -27,7 +27,7 @@ export const addSchema = joi.object<ProductType>({
         .required(),
 
     price: joi.number()
-        .max(19)
+        .min(0)
         .required(),
 
     type: joi.number()

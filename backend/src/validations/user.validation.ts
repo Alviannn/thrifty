@@ -26,9 +26,20 @@ const passwordSchema = joi.string()
     .regex(/[^a-zA-Z\d]/)
     .rule({ message: '{#label} requires at least a special character' });
 
+export interface UserIdType {
+    userId: number;
+}
+
 export interface LoginType {
     email: string;
     password: string;
+}
+
+export interface UpdateType {
+    password: string;
+    fullName: string;
+    phone: string;
+    address: string;
 }
 
 export interface RegisterType extends LoginType {
@@ -36,6 +47,12 @@ export interface RegisterType extends LoginType {
     phone: string;
     address: string;
 }
+
+export const userIdSchema = joi.object<UserIdType>({
+    userId: joi.number()
+        .min(0)
+        .required()
+});
 
 export const loginSchema = joi.object<LoginType>({
     email: joi.string()
@@ -72,4 +89,20 @@ export const registerSchema = joi.object<RegisterType>({
     address: joi.string()
         .max(64)
         .required()
+});
+
+export const updateSchema = joi.object<UpdateType>({
+    password: passwordSchema,
+
+    fullName: joi.string()
+        .max(64),
+
+    phone: joi.string()
+        .max(32)
+
+        .custom(validatePhone)
+        .rule({ message: '{#label} must only be numbers' }),
+
+    address: joi.string()
+        .max(64)
 });
