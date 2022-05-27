@@ -52,4 +52,16 @@ export class ProductRoute {
         });
     }
 
+    @ReqHandler('PUT', '/:productId')
+    async update(req: Request, res: Response) {
+        const { id: productId } = req.params as unknown as ProductIdType;
+        const body = req.body as ProductType;
+
+        await productService.update(productId, body);
+
+        return sendResponse(res, {
+            message: 'Successfully update product'
+        });
+    }
+
 }
