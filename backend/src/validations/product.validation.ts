@@ -4,3 +4,7 @@ export interface ProductType {
     price: number;
     type: number;
 }
+
+export interface ProductIdType {
+    id: number;
+}

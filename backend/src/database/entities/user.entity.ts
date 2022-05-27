@@ -1,6 +1,5 @@
 import { dateTransformer } from '.';
 import { DateTime } from 'luxon';
-import { Todo } from './todo.entity';
 import {
     BaseEntity, Entity,
     Column, PrimaryGeneratedColumn,
@@ -13,9 +12,6 @@ export class User extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id!: number;
-
-    @OneToMany(() => Todo, (todo) => todo.id)
-    todoList!: Todo[];
 
     @OneToMany(() => Product, (product) => product.id)
     products!: Product[];
@@ -31,6 +27,12 @@ export class User extends BaseEntity {
 
     @Column({ length: 64 })
     password!: string;
+
+    @Column({ length: 64 })
+    address!: string;
+
+    @Column('decimal', { default: 0 })
+    balance!: number;
 
     @Column({
         name: 'created_at',

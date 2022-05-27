@@ -6,7 +6,9 @@ import {
 import authenticate from '../../middlewares/authenticate.middleware';
 import { productService } from '../../services/product.service';
 import { sendResponse } from '../../utils/api.util';
-import type { ProductType } from '../../validations/product.validation';
+import type {
+    ProductIdType, ProductType
+} from '../../validations/product.validation';
 
 @Controller({ path: 'product' })
 export class ProductRoute {
@@ -20,6 +22,45 @@ export class ProductRoute {
         return sendResponse(res, {
             message: 'Successfully added new product',
             statusCode: StatusCodes.CREATED
+        });
+    }
+
+    @ReqHandler('GET', '/')
+    async get(req: Request, res: Response) {
+        const products = await productService.get();
+
+        return sendResponse(res, {
+            message: 'Successfully found all products',
+            statusCode: StatusCodes.OK,
+            data: {
+                products
+            }
+        });
+    }
+
+    @ReqHandler('GET', '/:productId')
+    async getById(req: Request, res: Response) {
+        const { id: productId } = req.params as unknown as ProductIdType;
+
+        const product = await productService.getById(productId);
+
+        return sendResponse(res, {
+            message: 'Successfully found product',
+            data: {
+                product
+            }
+        });
+    }
+
+    @ReqHandler('PUT', '/:productId')
+    async update(req: Request, res: Response) {
+        const { id: productId } = req.params as unknown as ProductIdType;
+        const body = req.body as ProductType;
+
+        await productService.update(productId, body);
+
+        return sendResponse(res, {
+            message: 'Successfully update product'
         });
     }
 
