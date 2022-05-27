@@ -15,7 +15,7 @@ class UserService {
     async topup(userId: number, balance: number) {
         const user = await this.get(userId);
 
-        user.balance = balance;
+        user.balance += balance;
         user.save();
     }
 
