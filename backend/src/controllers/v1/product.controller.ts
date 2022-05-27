@@ -69,6 +69,25 @@ export class ProductRoute {
         });
     }
 
+    @ReqHandler(
+        'GET', '/:productId/bargains',
+        authenticate(),
+        validate(productIdSchema, 'PARAMS')
+    )
+    async allBargains(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const { productId } = req.params as unknown as ProductIdType;
+
+        const bargains = await productService.viewBargains(userId, productId);
+
+        return sendResponse(res, {
+            message: 'Successfully get all bargain requests',
+            data: {
+                bargains
+            }
+        });
+    }
+
     @ReqHandler('GET', '/:productId', validate(productIdSchema, 'PARAMS'))
     async getById(req: Request, res: Response) {
         const { productId } = req.params as unknown as ProductIdType;

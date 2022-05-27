@@ -29,6 +29,9 @@ export class BargainRequest extends BaseEntity {
     @JoinColumn({ name: 'product_id' })
     product!: Product;
 
+    @Column({ name: 'product_id' })
+    productId!: number;
+
     @Column('decimal')
     price!: number;
 

@@ -42,6 +42,21 @@ class ProductService {
         await bargainReq.save();
     }
 
+    async viewBargains(userId: number, productId: number) {
+        const product = await Product.findOneBy({ id: productId });
+        if (!product) {
+            throw new ResponseError(
+                'Product not found',
+                StatusCodes.NOT_FOUND);
+        }
+
+        if (product.userId !== userId) {
+            throw Errors.NO_PERMISSION;
+        }
+
+        return BargainRequest.findBy({ productId });
+    }
+
     async getById(productId: number) {
         console.log(productId);
         const product = await Product.findOneBy({ id: productId });
