@@ -6,12 +6,15 @@ import { StatusCodes } from 'http-status-codes';
 import { productService } from '../../services/product.service';
 import { sendResponse } from '../../utils/api.util';
 import { bargainSchema } from '../../validations/bargain-request.validation';
-import { productIdSchema } from '../../validations/product.validation';
+import {
+    productIdSchema,
+    addSchema,
+    updateSchema
+} from '../../validations/product.validation';
 
 import {
     Controller, ReqHandler
 } from '../../internals/decorators/express.decorator';
-
 import type {
     CreateBargainDTO
 } from '../../validations/bargain-request.validation';
@@ -23,7 +26,7 @@ import type {
 @Controller({ path: 'product' })
 export class ProductRoute {
 
-    @ReqHandler('POST', '/', authenticate())
+    @ReqHandler('POST', '/', authenticate(), validate(addSchema))
     async add(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
         const body = req.body as ProductType;
@@ -68,7 +71,7 @@ export class ProductRoute {
 
     @ReqHandler('GET', '/:productId')
     async getById(req: Request, res: Response) {
-        const { id: productId } = req.params as unknown as ProductIdType;
+        const { productId } = req.params as unknown as ProductIdType;
 
         const product = await productService.getById(productId);
 
@@ -80,9 +83,9 @@ export class ProductRoute {
         });
     }
 
-    @ReqHandler('PUT', '/:productId')
+    @ReqHandler('PUT', '/:productId', validate(updateSchema))
     async update(req: Request, res: Response) {
-        const { id: productId } = req.params as unknown as ProductIdType;
+        const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as ProductType;
 
         await productService.update(productId, body);

@@ -42,6 +42,7 @@ class ProductService {
     }
 
     async getById(productId: number) {
+        console.log(productId);
         const product = await Product.findOneBy({ id: productId });
         if (!product) {
             throw new ResponseError(
@@ -62,7 +63,7 @@ class ProductService {
 
         product.name = rawProduct.name ?? product.name;
         product.price = rawProduct.price ?? product.price;
-        product.description = rawProduct.decription ?? product.description;
+        product.description = rawProduct.description ?? product.description;
         product.type = rawProduct.type ?? product.type;
         product.updatedAt = DateTime.utc();
 
