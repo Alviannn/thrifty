@@ -42,10 +42,15 @@ const registerSchema = Joi.object({
         .required()
         .min(8)
         .max(50)
+        .pattern(/[0-9]/)
+        .pattern(/[a-z]/)
+        .pattern(/[A-Z]/)
+        .pattern(/[^a-zA-Z0-9]/)
         .messages({
             'string.empty': 'Kolom password wajib diisi',
             'string.min': 'Kolom password harus mengandung setidaknya 8 karakter',
             'string.max': 'Kolom password tidak dapat mengandung lebih dari 50 karakter',
+            'string.pattern.base': 'Password harus mengandung setidaknya 1 huruf kecil, 1 huruf besar, 1 angka, dan 1 karakter spesial'
         }),
     confirmPassword: Joi
         .any()
