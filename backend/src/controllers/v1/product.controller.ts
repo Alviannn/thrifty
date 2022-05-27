@@ -90,10 +90,11 @@ export class ProductRoute {
         validate(updateSchema)
     )
     async update(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
         const { productId } = req.params as unknown as ProductIdType;
         const body = req.body as ProductType;
 
-        await productService.update(productId, body);
+        await productService.update(userId, productId, body);
 
         return sendResponse(res, {
             message: 'Successfully updated a product'

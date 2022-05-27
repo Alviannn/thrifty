@@ -3,7 +3,8 @@ import { DateTime } from 'luxon';
 import { Product } from '../database/entities/product.entity';
 import { User } from '../database/entities/user.entity';
 import { BargainRequest } from '../database/entities/bargain-request.entity';
-import { ResponseError } from '../utils/api.util';
+import { Errors, ResponseError } from '../utils/api.util';
+import { IsNull } from 'typeorm';
 
 import type { ProductType } from '../validations/product.validation';
 import type {
@@ -20,7 +21,7 @@ class ProductService {
     }
 
     async getAll() {
-        const products = await Product.find();
+        const products = await Product.findBy({ deletedAt: IsNull() });
 
         return products;
     }
@@ -53,12 +54,16 @@ class ProductService {
         return product;
     }
 
-    async update(productId: number, rawProduct: ProductType) {
+    async update(userId: number, productId: number, rawProduct: ProductType) {
         const product = await Product.findOneBy({ id: productId });
+
         if (!product) {
             throw new ResponseError(
                 'Product not found',
                 StatusCodes.NOT_FOUND);
+        }
+        if (product.userId !== userId) {
+            throw Errors.NO_PERMISSION;
         }
 
         product.name = rawProduct.name ?? product.name;
@@ -71,18 +76,15 @@ class ProductService {
     }
 
     async delete(userId: number, productId: number) {
-        const product = await Product.findOne({
-            select: ['id'],
-            where: {
-                id: productId,
-                userId
-            }
-        });
+        const product = await Product.findOneBy({ id: productId });
 
         if (!product) {
             throw new ResponseError(
                 'Product not found',
                 StatusCodes.NOT_FOUND);
+        }
+        if (product.userId !== userId) {
+            throw Errors.NO_PERMISSION;
         }
 
         product.remove();
