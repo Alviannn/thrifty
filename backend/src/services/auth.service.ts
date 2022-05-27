@@ -16,6 +16,7 @@ class AuthService {
 
     async login({ email, password }: LoginType): Promise<AuthTokens> {
         const foundUser = await User.findOneBy({ email });
+
         if (!foundUser) {
             throw new ResponseError(
                 'Account is not registered!',

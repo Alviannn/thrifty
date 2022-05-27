@@ -27,7 +27,9 @@ export class TransactionRoute {
         const body = req.body as CreateTransactionDTO;
         await transactionService.sendPayment(body);
 
-        return sendResponse(res, { message: 'Successfully paid for product' });
+        return sendResponse(res, {
+            message: 'Successfully paid for product'
+        });
     }
 
 }
