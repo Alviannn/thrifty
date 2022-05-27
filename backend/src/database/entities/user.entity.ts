@@ -6,6 +6,7 @@ import {
     Column, PrimaryGeneratedColumn,
     OneToMany
 } from 'typeorm';
+import { Product } from './product.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -15,6 +16,9 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Todo, (todo) => todo.id)
     todoList!: Todo[];
+
+    @OneToMany(() => Product, (product) => product.id)
+    products!: Product[];
 
     @Column({ name: 'full_name', length: 64 })
     fullName!: string;
