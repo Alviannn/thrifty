@@ -33,7 +33,7 @@ export class ProductRoute {
         await productService.add(userId, body);
 
         return sendResponse(res, {
-            message: 'Successfully added new product',
+            message: 'Successfully added a new product',
             statusCode: StatusCodes.CREATED
         });
     }
@@ -76,7 +76,7 @@ export class ProductRoute {
         const product = await productService.getById(productId);
 
         return sendResponse(res, {
-            message: 'Successfully found product',
+            message: 'Successfully found a product',
             data: {
                 product
             }
@@ -91,7 +91,19 @@ export class ProductRoute {
         await productService.update(productId, body);
 
         return sendResponse(res, {
-            message: 'Successfully update product'
+            message: 'Successfully updated a product'
+        });
+    }
+
+    @ReqHandler('DELETE', '/:productId', authenticate())
+    async delete(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const { productId } = req.params as unknown as ProductIdType;
+
+        await productService.delete(userId, productId);
+
+        return sendResponse(res, {
+            message: 'Successfully deleted a product'
         });
     }
 
