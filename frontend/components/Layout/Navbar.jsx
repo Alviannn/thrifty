@@ -26,7 +26,7 @@ const ProfileText = styled.p`
 `;
 
 const Navbar = () => {
-	const [loggedIn, setLoggedIn] = useState(true);
+	const [loggedIn, setLoggedIn] = useState(false);
 
 	return (
 		<>
