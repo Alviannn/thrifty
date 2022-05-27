@@ -23,7 +23,7 @@ import type {
 export class BargainRequestRoute {
 
     @ReqHandler(
-        'POST', '/:productId/bargains',
+        'POST', '/:productId',
         authenticate(),
         validate(productIdSchema, 'PARAMS'),
         validate(bargainSchema)
@@ -41,7 +41,7 @@ export class BargainRequestRoute {
     }
 
     @ReqHandler(
-        'GET', '/:productId/bargains',
+        'GET', '/:productId',
         authenticate(),
         validate(productIdSchema, 'PARAMS')
     )
