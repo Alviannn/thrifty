@@ -12,7 +12,8 @@ import {
     Controller,
     ReqHandler
 } from '../../internals/decorators/express.decorator';
-import type { UserIdType } from '../../validations/user.validation';
+import type { UpdateType, UserIdType } from '../../validations/user.validation';
+import { updateSchema } from '../../validations/user.validation';
 import { userIdSchema } from '../../validations/user.validation';
 import { productService } from '../../services/product.service';
 
@@ -56,6 +57,18 @@ export class UserRoute {
             data: {
                 products
             }
+        });
+    }
+
+    @ReqHandler('PUT', '/', authenticate(), validate(updateSchema))
+    async update(req: Request, res: Response) {
+        const { id: userId } = req.userPayload!;
+        const body = req.body as UpdateType;
+
+        await userService.update(userId, body);
+
+        return sendResponse(res, {
+            message: 'Successfully updated a user profile'
         });
     }
 
