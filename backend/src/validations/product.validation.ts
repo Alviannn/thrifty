@@ -1,9 +1,9 @@
 import joi from 'joi';
 
-export interface ProductType {
+export interface ProductDTO {
     name: string;
-    description: string;
     price: number;
+    description: string;
     type: number;
 }
 
@@ -13,11 +13,11 @@ export interface ProductIdType {
 
 export const productIdSchema = joi.object<ProductIdType>({
     productId: joi.number()
-        .min(0)
+        .min(1)
         .required()
 });
 
-export const addSchema = joi.object<ProductType>({
+export const productAddSchema = joi.object<ProductDTO>({
     name: joi.string()
         .max(64)
         .required(),
@@ -27,7 +27,7 @@ export const addSchema = joi.object<ProductType>({
         .required(),
 
     price: joi.number()
-        .min(0)
+        .min(1)
         .required(),
 
     type: joi.number()
@@ -35,15 +35,15 @@ export const addSchema = joi.object<ProductType>({
         .required()
 });
 
-export const updateSchema = joi.object<ProductType>({
+export const productUpdateSchema = joi.object<ProductDTO>({
     name: joi.string()
         .max(64),
 
+    price: joi.number()
+        .min(1),
+
     description: joi.string()
         .max(1023),
-
-    price: joi.number()
-        .max(19),
 
     type: joi.number()
         .max(5)

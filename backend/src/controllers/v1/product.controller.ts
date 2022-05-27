@@ -7,25 +7,25 @@ import { productService } from '../../services/product.service';
 import { sendResponse } from '../../utils/api.util';
 import {
     productIdSchema,
-    addSchema,
-    updateSchema
+    productAddSchema,
+    productUpdateSchema
 } from '../../validations/product.validation';
 
 import {
     Controller, ReqHandler
 } from '../../internals/decorators/express.decorator';
 import type {
-    ProductType,
+    ProductDTO,
     ProductIdType
 } from '../../validations/product.validation';
 
 @Controller({ path: 'products' })
 export class ProductRoute {
 
-    @ReqHandler('POST', '/', authenticate(), validate(addSchema))
+    @ReqHandler('POST', '/', authenticate(), validate(productAddSchema))
     async add(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
-        const body = req.body as ProductType;
+        const body = req.body as ProductDTO;
         await productService.add(userId, body);
 
         return sendResponse(res, {
@@ -65,12 +65,12 @@ export class ProductRoute {
         'PUT', '/:productId',
         authenticate(),
         validate(productIdSchema, 'PARAMS'),
-        validate(updateSchema)
+        validate(productUpdateSchema)
     )
     async update(req: Request, res: Response) {
         const { id: userId } = req.userPayload!;
         const { productId } = req.params as unknown as ProductIdType;
-        const body = req.body as ProductType;
+        const body = req.body as ProductDTO;
 
         await productService.update(userId, productId, body);
 

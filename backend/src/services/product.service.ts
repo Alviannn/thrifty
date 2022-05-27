@@ -5,11 +5,11 @@ import { Product } from '../database/entities/product.entity';
 import { User } from '../database/entities/user.entity';
 import { Errors, ResponseError } from '../utils/api.util';
 
-import type { ProductType } from '../validations/product.validation';
+import type { ProductDTO } from '../validations/product.validation';
 
 class ProductService {
 
-    async add(userId: number, rawProduct: ProductType) {
+    async add(userId: number, rawProduct: ProductDTO) {
         const user = (await User.findOneBy({ id: userId }))!;
         const product = Product.create({ ...rawProduct, user });
 
@@ -70,7 +70,7 @@ class ProductService {
         return products;
     }
 
-    async update(userId: number, productId: number, dto: ProductType) {
+    async update(userId: number, productId: number, dto: ProductDTO) {
         const { name, price, description, type } = dto;
         const product = await Product.findOneBy({ id: productId });
 
