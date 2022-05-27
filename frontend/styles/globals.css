@@ -26,82 +26,82 @@ a {
 }
 
 .bg-dark-brown {
-    background-color: #753523 !important;
+	background-color: #753523 !important;
 }
 
 .bg-brown {
-    background-color: #B05C3C !important;
+	background-color: #b05c3c !important;
 }
 
 .bg-mocca {
-    background-color: #D79771 !important;
+	background-color: #d79771 !important;
 }
 
 .bg-beige {
-    background-color: #FFEBC9 !important;
+	background-color: #ffebc9 !important;
 }
 
 .text-dark-brown {
-    color: #753523 !important;
+	color: #753523 !important;
 }
 
 .text-brown {
-    color: #B05C3C !important;
+	color: #b05c3c !important;
 }
 
 .text-mocca {
-    color: #D79771 !important;
+	color: #d79771 !important;
 }
 
 .text-beige {
-    color: #FFEBC9 !important;
+	color: #ffebc9 !important;
 }
 
 .btn-dark-brown {
-    background-color: #753523 !important;
-    color: #FFF !important;
-    box-shadow: rgba(149, 157, 165, .2) 0 8px 24px;
+	background-color: #753523 !important;
+	color: #fff !important;
+	box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
 }
 
 .btn-dark-brown:hover {
-    background-color: #682B1A !important;
+	background-color: #682b1a !important;
 }
 
 .btn-brown {
-    background-color: #B05C3C !important;
-    color: #FFF !important;
-    box-shadow: rgba(149, 157, 165, .2) 0 8px 24px;
+	background-color: #b05c3c !important;
+	color: #fff !important;
+	box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
 }
 
 .btn-brown:hover {
-    background-color: #A55231 !important;
+	background-color: #a55231 !important;
 }
 
 .btn-mocca {
-    background-color: #D79771 !important;
-    color: #FFF !important;
-    box-shadow: rgba(149, 157, 165, .2) 0 8px 24px;
+	background-color: #d79771 !important;
+	color: #fff !important;
+	box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
 }
 
 .btn-mocca:hover {
-    background-color: #CE8C66 !important;
+	background-color: #ce8c66 !important;
 }
 
 .btn-beige {
-    background-color: #FFEBC9 !important;
-    box-shadow: rgba(149, 157, 165, .2) 0 8px 24px;
+	background-color: #ffebc9 !important;
+	box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px;
 }
 
 .btn-beige:hover {
-    background-color: #EED8B2 !important;
+	background-color: #eed8b2 !important;
 }
 
 .btn:focus {
-    box-shadow: none !important;
+	box-shadow: none !important;
 }
 
 .form-control:focus {
-    border-bottom: 1px solid #bfbe58 !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
+	border-bottom: 1px solid #bfbe58 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
 }

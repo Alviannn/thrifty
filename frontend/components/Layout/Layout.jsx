@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
 		<>
             <Background />
 			<Navbar />
-			<div class="container">
+			<div className="container">
 				<main>{children}</main>
 			</div>
 			<Footer />

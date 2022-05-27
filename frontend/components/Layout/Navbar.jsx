@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { FaShoppingCart, FaSignInAlt } from "react-icons/fa";
+import { FaShoppingCart, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import styled from "styled-components";
+import react, { useState } from "react";
+import { CgProfile } from "react-icons/cg";
 
 const Nav = styled.nav`
 	z-index: 1;
@@ -16,7 +18,16 @@ const Nav = styled.nav`
 	}
 `;
 
+const ProfileText = styled.p`
+	padding: 0;
+	margin: 0;
+	font-weight: bold;
+	font-size: 18px;
+`;
+
 const Navbar = () => {
+	const [loggedIn, setLoggedIn] = useState(true);
+
 	return (
 		<>
 			<Nav className="navbar navbar-expand-lg navbar-light bg-transparent position-absolute w-100 mb-3 text-black">
@@ -40,19 +51,19 @@ const Navbar = () => {
 					<div className="collapse navbar-collapse mt-lg-0 mt-2 pb-lg-0 rounded" id="navbarNav">
 						<ul className="navbar-nav">
 							<li className="nav-item py-2">
-								<Link href="/products">
+								<Link href="/produk">
 									<a
-										className={`fs-4 mx-4 text-decoration-none navbar-brand`}
+										className={`fs-5 mx-4 text-decoration-none navbar-brand`}
 										style={{ color: "#A0A0A0" }}
 									>
-										Product
+										Produk
 									</a>
 								</Link>
 							</li>
 							<li className="nav-item py-2">
-								<Link href="/about">
+								<Link href="/tokosaya">
 									<a
-										className={`fs-4 mx-4 text-decoration-none navbar-brand`}
+										className={`fs-5 mx-4 text-decoration-none navbar-brand`}
 										style={{ color: "#A0A0A0" }}
 									>
 										Toko Saya
@@ -60,12 +71,35 @@ const Navbar = () => {
 								</Link>
 							</li>
 						</ul>
-						<form className="d-flex ms-auto position-relative">
-							<Link href="/login">
-								<a className="btn btn-gold ms-3 py-2">
-									<FaSignInAlt /> Login
-								</a>
-							</Link>
+						<form
+							className="d-flex ms-auto position-relative nav-item"
+							style={{ paddingTop: "5px", paddingBottom: "5px" }}
+						>
+							{!loggedIn && (
+								<div className="ms-3" style={{ paddingTop: "11px", paddingBottom: "11px" }}>
+									<Link href="/register">
+										<button className="btn mx-2 btn-brown">
+											<FaUserPlus /> Daftar
+										</button>
+									</Link>
+									<Link href="/login">
+										<button className="btn mx-2 btn-dark-brown">
+											<FaSignInAlt /> Masuk
+										</button>
+									</Link>
+								</div>
+							)}
+							{loggedIn && (
+								<div style={{ marginLeft: "10px" }}>
+									<Link href="/profile">
+										<button className="btn">
+											<ProfileText>
+												<CgProfile /> Fabian Habil
+											</ProfileText>
+										</button>
+									</Link>
+								</div>
+							)}
 						</form>
 					</div>
 				</div>
