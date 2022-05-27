@@ -87,7 +87,8 @@ class ProductService {
             throw Errors.NO_PERMISSION;
         }
 
-        product.remove();
+        product.deletedAt = DateTime.utc();
+        await product.save();
     }
 
 }
