@@ -5,6 +5,13 @@ import {
 import { dateTransformer } from '.';
 import { User } from './user.entity';
 
+export enum ProductType {
+    OTHERS,
+    ATASAN,
+    BAWAHAN,
+    LUARAN
+}
+
 @Entity('products')
 export class Product extends BaseEntity {
 
@@ -27,8 +34,11 @@ export class Product extends BaseEntity {
     @Column({ length: 1023 })
     description!: string;
 
-    @Column({ type: 'integer' })
-    type!: number;
+    @Column({
+        type: 'enum',
+        enum: ProductType
+    })
+    type!: ProductType;
 
     @Column({
         name: 'created_at',
