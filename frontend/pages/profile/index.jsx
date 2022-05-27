@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaClock, FaEnvelope, FaMapMarkerAlt, FaPencilAlt, FaPhoneAlt, FaTag, FaMoneyBillAlt } from "react-icons/fa";
+import { FaClock, FaDollarSign, FaEnvelope, FaMapMarkerAlt, FaPencilAlt, FaPhoneAlt, FaTag, FaMoneyBillAlt } from "react-icons/fa";
 import UserInfoItem from "../../components/User/UserInfoItem";
 import Head from "next/head";
 import { useState } from "react";
@@ -66,11 +66,7 @@ const Index = () => {
 										<UserInfoItem icon={<FaMoneyBillAlt />} isi="Rp500000" title="Saldo" />
 										<div className="row">
 											<div className="col-6">
-												<Link href="/topup">
-													<a className="btn btn-mocca w-100 mt-2">
-														<FaMoneyBillAlt /> Topup
-													</a>
-												</Link>
+                                                <button className="btn btn-mocca w-100 mt-2"  data-bs-toggle="modal" data-bs-target="#exampleModal"><FaMoneyBillAlt /> Topup</button>
 											</div>
 											<div className="col-6">
 												<Link href="/profile/edit">
@@ -81,6 +77,27 @@ const Index = () => {
 											</div>
 										</div>
 									</div>
+                                    <div class="modal fade justify-content-center" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Topup</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div className="form-group mb-3">
+                                                        <span className="me-2 mt-1 position-absolute text-mocca"><FaDollarSign /></span>
+                                                        <input type="text" className="form-control bg-transparent w-75 ps-4 border-0 border-bottom rounded-0 d-inline text-dark-brown" placeholder="Masukkan jumlah topup anda" />
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-mocca" data-bs-dismiss="modal">Batal</button>
+                                                    <form action="/topup" method="PUT">
+                                                        <button type="submit" class="btn btn-brown">Bayar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
 						</div>
