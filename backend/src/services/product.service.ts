@@ -75,7 +75,7 @@ class ProductService {
                 StatusCodes.NOT_FOUND);
         }
 
-        const products = await Product.findOne({
+        const products = await Product.find({
             where: {
                 userId,
                 deletedAt: IsNull()
