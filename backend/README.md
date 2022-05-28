@@ -15,9 +15,6 @@ To see the dependencies used in this boilerplate, [go here](#dependencies).
 - [Environment Variables](#environment-variables)
 - [Dependencies](#dependencies)
 
-## Entity-Relationship Diagram
-![erd](.github/ERD.png)
-
 ## Quick Start
 1. Make sure you have installed [Yarn](https://classic.yarnpkg.com/lang/en/) and [PostgreSQL](https://www.postgresql.org/download/).
 1. Clone the repo
@@ -32,10 +29,6 @@ To see the dependencies used in this boilerplate, [go here](#dependencies).
 1. Generate JWT secrets
    ```sh
    yarn jwt:generate
-   ```
-1. (_Optional_) If you want, you can seed data
-   ```sh
-   yarn seed
    ```
 1. Run the dev server
    ```sh
