@@ -68,7 +68,12 @@ export class Product extends CustomEntity {
     deletedAt?: DateTime;
 
     toSimple(): Record<string, unknown> {
-        throw Error('Method not implemented.');
+        return {
+            name: this.name,
+            description: this.description,
+            price: this.price,
+            type: this.type
+        };
     }
 
     toJSON(): Record<string, unknown> {

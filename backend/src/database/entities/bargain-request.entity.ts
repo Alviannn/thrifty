@@ -2,11 +2,11 @@ import { User } from './user.entity';
 import { Product } from './product.entity';
 import { DateTime } from 'luxon';
 import { Transaction } from './transaction.entity';
+import { CustomEntity } from '../base/entity';
 import {
     Column, PrimaryGeneratedColumn, JoinColumn,
-    BaseEntity, Entity,
-    ManyToOne,
-    OneToOne,
+    Entity,
+    ManyToOne, OneToOne,
 } from 'typeorm';
 
 export enum BargainStatus {
@@ -17,7 +17,7 @@ export enum BargainStatus {
 }
 
 @Entity('bargain_requests')
-export class BargainRequest extends BaseEntity {
+export class BargainRequest extends CustomEntity {
 
     @PrimaryGeneratedColumn()
     id!: number;
@@ -65,5 +65,28 @@ export class BargainRequest extends BaseEntity {
         nullable: true
     })
     updatedAt?: DateTime;
+
+    toSimple(): Record<string, unknown> {
+        throw Error('Method not implemented.');
+    }
+
+    toJSON(): Record<string, unknown> {
+        const clone = { ...this } as Record<string, unknown>;
+
+        if ('user' in clone) {
+            delete clone.user;
+            clone.seller = this.user.toSimple();
+        }
+
+        if ('product' in clone) {
+            clone.product = this.product.toSimple();
+        }
+
+        delete clone.userId;
+        delete clone.productId;
+
+        return clone;
+    }
+
 
 }
