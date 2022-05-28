@@ -5,7 +5,6 @@ import type {
 
 export interface CreateBargainDTO {
     price: number;
-    quantity: number;
 }
 
 export interface BargainIdDTO {
@@ -17,10 +16,7 @@ export interface UpdateBargainDTO {
 }
 
 export const bargainSchema = joi.object<CreateBargainDTO>({
-    price: joi.number().required(),
-    quantity: joi.number()
-        .min(1)
-        .required()
+    price: joi.number().required()
 });
 
 export const bargainIdSchema = joi.object<BargainIdDTO>({

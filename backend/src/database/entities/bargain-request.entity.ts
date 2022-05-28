@@ -50,9 +50,6 @@ export class BargainRequest extends CustomEntity {
     })
     status!: BargainStatus;
 
-    @Column()
-    quantity!: number;
-
     @Column({
         name: 'created_at',
         type: 'timestamp',

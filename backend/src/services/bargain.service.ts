@@ -31,18 +31,18 @@ class BargainService {
     }
 
     async getAll(userId: number, productId: number) {
-        const product = await Product.findOneBy({ id: productId });
-        if (!product) {
-            throw new ResponseError(
-                'Product not found',
-                StatusCodes.NOT_FOUND);
-        }
-
-        if (product.userId !== userId) {
-            throw Errors.NO_PERMISSION;
-        }
-
-        return BargainRequest.findBy({ productId });
+        return BargainRequest.find({
+            where: {
+                product: {
+                    id: productId,
+                    user: { id: userId }
+                }
+            },
+            relations: {
+                user: true,
+                product: true
+            }
+        });
     }
 
     async update(
@@ -74,7 +74,8 @@ class BargainService {
                 user: { id: userId }
             },
             relations: {
-                user: true
+                user: true,
+                product: true
             }
         });
 
