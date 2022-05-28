@@ -38,48 +38,57 @@ const EditButton = styled.a`
 `;
 
 const ProductItem = ({ item }) => {
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, profile } = useAuth();
+	const tanggal = item.createdAt;
+	const tanggalfix = tanggal?.slice(0, 10);
+
 	return (
-		<Card className="card m-2 p-2">
-			<CardImage>
-				<Image
-					src={item.image}
-					className="card-img-top m-auto"
-					alt={item.title}
-					width="100%"
-					height="100%"
-					layout="responsive"
-					priority
-				/>
-			</CardImage>
-			<div className="card-body">
-				<h6 className="card-title text-dark-brown">{item.title}</h6>
-				<h5 className="card-text">Rp. {item.price}</h5>
-				<hr />
-				<h6 className="card-text text-dark-brown mb-3">
-					{" "}
-					Oleh{" "}
-					<Link href="/profile/2">
-						<a className="text-decoration-none text-brown">Rahmat</a>
-					</Link>
-					- 5m yang lalu
-				</h6>
-				<Link href={`/products/${item.id}`}>
-					<DetailButton className="btn btn-mocca w-100">
-						Lihat Detail <FaArrowRight />
-					</DetailButton>
-				</Link>
-				{isAuthenticated && (
-					<>
-						<Link href={`/products/edit/${item.id}`}>
-							<EditButton className="btn btn-warning">
-								<FaPencilAlt />
-							</EditButton>
-						</Link>
-					</>
-				)}
-			</div>
-		</Card>
+		<>
+			{item && (
+				<>
+					<Card className="card m-2 p-2">
+						<CardImage>
+							<Image
+								src={item.image}
+								className="card-img-top m-auto"
+								alt={item.ma}
+								width="100%"
+								height="100%"
+								layout="responsive"
+								priority
+							/>
+						</CardImage>
+						<div className="card-body">
+							<h6 className="card-title text-dark-brown">{item.name}</h6>
+							<h5 className="card-text">Rp. {item.price}</h5>
+							<hr />
+							<h6 className="card-text text-dark-brown">
+								{" "}
+								Oleh{" "}
+								<Link href={`/profile/${item.seller.id}`}>
+									<a className="text-decoration-none text-brown">{item.seller.fullName}</a>
+								</Link>
+							</h6>
+							<h6 className="card-text text-dark-brown mb-3">{tanggalfix}</h6>
+							<Link href={`/products/${item.id}`}>
+								<DetailButton className="btn btn-mocca w-100">
+									Lihat Detail <FaArrowRight />
+								</DetailButton>
+							</Link>
+							{isAuthenticated && item.seller.id == profile.id && (
+								<>
+									<Link href={`/products/edit/${item.id}`}>
+										<EditButton className="btn btn-warning">
+											<FaPencilAlt />
+										</EditButton>
+									</Link>
+								</>
+							)}
+						</div>
+					</Card>
+				</>
+			)}
+		</>
 	);
 };
 

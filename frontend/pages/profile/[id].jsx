@@ -3,13 +3,17 @@ import useSWR from "swr";
 import axios from "axios";
 import ProductItem from "../../components/Product/ProductItem";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 const Profile = () => {
-	const address = "https://fakestoreapi.com/products";
+	const router = useRouter();
 
+	const address = `http://localhost:5000/v1/users/${router.query.id}/products`;
+	console.log(router.query.id);
 	const fetcher = async (url) => {
 		const { data } = await axios.get(url);
-		return data;
+		const hasil = data.data.products;
+		return hasil;
 	};
 
 	const options = {
@@ -19,12 +23,13 @@ const Profile = () => {
 	};
 
 	const { data: items } = useSWR(address, fetcher, options);
-
+	console.log(items);
 	return (
 		<>
 			<Head>
 				<title>thrifty! - Toko</title>
 			</Head>
+
 			<div className="container min-vh-100 py-5">
 				{!items ? (
 					<FetchLoading />
@@ -32,8 +37,8 @@ const Profile = () => {
 					<>
 						<div className="row mt-lg-5 pt-3">
 							<div className="justify-content-center align-items-center d-flex flex-column">
-								<h1 className="text-dark-brown">Toko Fabian</h1>
-								<h5 className="text-brown">Jln. Buah Batu</h5>
+								<h1 className="text-dark-brown">Toko {items[0].seller.fullName}</h1>
+								<h5 className="text-brown">{items[0].seller.address}</h5>
 							</div>
 							{items.map((item) => {
 								return (

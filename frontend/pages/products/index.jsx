@@ -8,11 +8,13 @@ import ProductItem from "../../components/Product/ProductItem";
 import { useAuth } from "../../contexts/auth";
 
 const Product = () => {
-	const address = "https://fakestoreapi.com/products";
+	const address = "http://localhost:5000/v1/products";
 
 	const fetcher = async (url) => {
 		const { data } = await axios.get(url);
-		return data;
+		const hasil = data.data.products;
+		console.log(hasil);
+		return hasil;
 	};
 
 	const options = {

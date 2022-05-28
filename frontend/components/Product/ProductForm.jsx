@@ -4,10 +4,12 @@ import { FaArrowLeft, FaDollarSign, FaDotCircle, FaInfoCircle, FaPlus, FaTag } f
 import productSchema from "../../validations/product-validation";
 import ProductFormInput from "../../components/Product/ProductFormInput";
 import axios from "axios";
+import { useAuth } from "../../contexts/auth";
 
 const FormInputContext = createContext();
 
 const ProductForm = () => {
+	const { accessToken } = useAuth();
 	const [data, setData] = useState({
 		name: "",
 		price: "",
@@ -16,21 +18,6 @@ const ProductForm = () => {
 	});
 
 	const [errors, setErrors] = useState({});
-
-	const postBarang = () => {
-		axios
-			.post("http://localhost:5000/v1/products", {
-				name: data.name,
-				price: parseInt(data.price),
-				description: parseInt(data.description),
-			})
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
 
 	const validateForm = (e) => {
 		const result = productSchema.validate(data);
@@ -47,6 +34,57 @@ const ProductForm = () => {
 		} else {
 			postBarang();
 		}
+	};
+
+	const [fotoUpload, setFotoUpload] = useState(null);
+
+	function useDisplayImage() {
+		const [result, setResult] = useState(null);
+		function uploader(e) {
+			const imageFile = e.target.files[0];
+			const reader = new FileReader();
+			setTimeout(() => {
+				reader.addEventListener("load", (e) => {
+					let test = "";
+					test = e.target.result;
+					setResult(test);
+					setFotoUpload(test);
+				});
+				reader.readAsDataURL(imageFile);
+			}, 100);
+		}
+		return { result, uploader };
+	}
+
+	const { result, uploader } = useDisplayImage();
+
+	const postBarang = () => {
+		let type = parseInt(data.type);
+		if (type == 4) {
+			type = 0;
+		}
+		axios
+			.post(
+				"http://localhost:5000/v1/products",
+				{
+					name: data.name,
+					price: parseInt(data.price),
+					description: data.description,
+					type: type,
+					imageData: result,
+				},
+				{
+					headers: {
+						authorization: `Bearer ${accessToken}`,
+					},
+				}
+			)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	return (
@@ -69,6 +107,22 @@ const ProductForm = () => {
 					<span className="bg-mocca p-2 me-2 rounded">4. Lainnya</span>
 				</div>
 			</div>
+			<button className="btn btn-beige w-75 mb-2">
+				<label htmlFor={"upload"}>
+					<FaPlus /> Upload Image
+					<input
+						type="file"
+						accept="image/*"
+						id="upload"
+						onChange={(e) => {
+							uploader(e);
+							const image = new Image();
+							image.src = window.URL.createObjectURL(e.target.files[0]);
+						}}
+						hidden
+					/>
+				</label>
+			</button>
 			<button className="btn btn-brown w-75 mb-2" onClick={validateForm}>
 				<FaPlus /> Tambah
 			</button>
