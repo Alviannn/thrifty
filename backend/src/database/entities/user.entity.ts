@@ -52,7 +52,8 @@ export class User extends CustomEntity {
             id: this.id,
             fullName: this.fullName,
             email: this.email,
-            phone: this.phone
+            phone: this.phone,
+            address: this.address
         };
     }
 
